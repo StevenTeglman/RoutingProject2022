@@ -12,11 +12,11 @@ This creates a virtual Python environment in the project folder, which is specif
 
 In VSCode, if you open a Python file (.py), you should see your python version followed by ('.venv':venv), showing that that VSCode is using the Python instance in your newly created virtual environment, and not the one on your base machine. 
 
-![What you should see](\.readmepics\pythonvenv.png)
+![What you should see](/.readmepics/pythonvenv.png)
 
 If VSCode doesn't automatically switch to the virtual environment, you may have to change it manually by clicking the circled area in the above image, and selecting the correct environment
 
-![Selecting the correct environment](.readmepics\goodvenv.png)
+![Selecting the correct environment](/.readmepics/goodvenv.png)
 
 
 3. Now when you open a terminal in VSCode, you should notice a "(.venv)" on the line you're working on. If using a terminal outside of VSCode, you'll have to activate it manually. Do this by using a terminal to navigate to:
