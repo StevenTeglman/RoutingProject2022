@@ -1,23 +1,30 @@
-graph = {'A': ['B', 'C'],
-            'B': ['C', 'D'],
-            'C': ['D'],
-            'D': ['C'],
-            'E': ['F'],
-            'F': ['C']}
+from ast import List
+from turtle import color
+import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+from util import graph
+from algorithms import depth_first
 
-def find_path(graph, start, end, path=[]):
-    path = path + [start]
-    if start == end:
-        return path
-    
-    if start not in graph.keys():
-        return None
-    
-    for node in graph[start]:
-        if node not in path:
-            newpath = find_path(graph, node, end, path)
-            if newpath: return newpath
-    
-    return None
+# Initialise empty graph G
+G = graph.create_graph(5,5)
 
-print(find_path(graph, 'A', 'D'))
+# Run your chosen algorithm and get a path back.
+path = list(depth_first.algorithm(G,0,18))
+
+# Add path as edges to G
+for i in range((len(path) - 1)):
+    G[path[0+i]][path[1+i]]['color']="r"
+    G[path[0+i]][path[1+i]]['weight']=5
+    
+# Set vertex positioning to layers of straight lines
+pos = nx.multipartite_layout(G, subset_key='layer')
+
+# Plot graph
+colors = nx.get_edge_attributes(G,'color').values()
+weights = nx.get_edge_attributes(G,'weight').values()
+
+
+plt.figure(figsize=(15, 10))
+nx.draw(G, pos, node_size=1000, node_color='#43C3FF', with_labels=True, font_color='white', edge_color=colors, width=list(weights))
+plt.show()
