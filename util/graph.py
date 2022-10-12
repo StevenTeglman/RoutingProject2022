@@ -50,3 +50,7 @@ def create_graph(x: int, y: int):
         G[i[0]][i[1]]['weight']=2
         
     return G
+
+def get_manhattan(start, stop, graph):
+    dist = dict(nx.all_pairs_shortest_path_length(graph))
+    return dist[start][stop]
