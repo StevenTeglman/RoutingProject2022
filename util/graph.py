@@ -10,7 +10,7 @@ def create_graph(x: int, y: int):
 
     # Reshape to emulate 12x10 crop patch
     layers = vertices.reshape((x, y))
-
+    
     # Add vertices and edges to G
     for i in range(y):
         for j in range(x):
@@ -50,3 +50,6 @@ def create_graph(x: int, y: int):
         G[i[0]][i[1]]['weight']=2
         
     return G
+
+def manhatten_distance():
+    pass

@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 networkx_testing.py
 stevens_networkx.py
+scratch.py
