@@ -7,12 +7,16 @@ def algorithm(graph, start, end, path=[], frontier=[], visited=[]):
     
     if start not in graph.nodes():
         return None
-    
+
     for node in graph[start]:
         if node not in visited:
             new_path = path + [node]
-            frontier += [new_path]
+            frontier.append(new_path)
     if path in frontier:
         frontier.remove(path)
+
+    for i in frontier:
+        if i[-1] in visited:
+            frontier.remove(i)
 
     return algorithm(graph, frontier[0][-1], end, frontier[0], frontier, visited)
