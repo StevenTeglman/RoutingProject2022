@@ -4,13 +4,18 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 from util import graph
+from algorithms import breadth_first
 from algorithms import depth_first
 
 # Initialise empty graph G
 G = graph.create_graph(5,5)
 
 # Run your chosen algorithm and get a path back.
-path = list(depth_first.algorithm(G,0,18))
+path = breadth_first.algorithm(G,0,18)
+# path = list(depth_first.algorithm(G,0,18))
+# path = list(bre.algorithm(G,0,18))
+# path = list(bre.algorithm(G,0,18))
+
 
 # Add path as edges to G
 for i in range((len(path) - 1)):
