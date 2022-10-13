@@ -6,12 +6,14 @@ import numpy as np
 from util import graph
 from algorithms import breadth_first
 from algorithms import depth_first
+from algorithms import dijkstra
 
 # Initialise empty graph G
 G = graph.create_graph(5,5)
 
 # Run your chosen algorithm and get a path back.
-path = breadth_first.algorithm(G,0,18)
+path = dijkstra.algorithm(G, 0, 18)
+# path = breadth_first.algorithm(G,0,18)
 # path = list(depth_first.algorithm(G,0,18))
 # path = list(bre.algorithm(G,0,18))
 # path = list(bre.algorithm(G,0,18))
