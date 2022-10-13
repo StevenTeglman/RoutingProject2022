@@ -51,5 +51,11 @@ def create_graph(x: int, y: int):
         
     return G
 
+<<<<<<< HEAD
 def manhatten_distance():
     pass
+=======
+def get_manhattan(start, stop, graph):
+    dist = dict(nx.all_pairs_shortest_path_length(graph))
+    return dist[start][stop]
+>>>>>>> origin
