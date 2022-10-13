@@ -14,7 +14,7 @@ def algorithm(graph, start, end):
         connections = graph[curr_min]
 
         for connection in connections:
-            edgeval = shortest[curr_min] + 1 #assume each edge weight is equal (= 1)
+            edgeval = shortest[curr_min] + graph[curr_min][connection]['weight'] #assume each edge weight is equal (= 1)
             if edgeval < shortest[connection]:
                 shortest[connection] = edgeval
                 previous[connection] = curr_min
