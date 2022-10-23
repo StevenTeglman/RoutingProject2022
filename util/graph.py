@@ -100,7 +100,7 @@ def create_weighted_graph(x: int, y: int):
         G[i[0]][i[1]]['color']="black"
         weight = random.randrange(1, 10)
         G[i[0]][i[1]]['weight']= weight
-        G[i[0]][i[1]]['thickness']= weight
+        G[i[0]][i[1]]['thickness']= 2
         
     return G
 

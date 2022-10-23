@@ -1,3 +1,5 @@
+from timeit import default_timer as timer
+
 def algorithm(graph, start, end, path=[], frontier=[], visited=[]):
     visited.append(start)
     if not frontier and start not in path:
@@ -23,15 +25,24 @@ def algorithm(graph, start, end, path=[], frontier=[], visited=[]):
 
 
 def non_recursive_algorithm(graph, start, goal):
+    # For statistics
+    operations = 0
+    start_time = timer()    
+    
     visited = []
     queue = [[start]]
 
     while queue:
+        operations += 1
         current_path = queue.pop(0)
         exploring = current_path[-1]
 
         if exploring == goal:
-            return current_path
+            end_time = timer()
+            stats = {"Operations": operations,
+                     "Time_Secs": end_time - start_time}
+
+            return current_path, stats
 
         for node in graph[exploring]:
             if node not in visited:
