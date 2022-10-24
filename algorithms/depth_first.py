@@ -1,8 +1,14 @@
+from timeit import default_timer as timer
 
 def algorithm(graph, start, end, path=[]):
+    # For statistics
+    start_time = timer()    
+    
     path = path + [start]
     if start == end:
-        return path
+        end_time = timer()
+        stats = {"Time_Secs": end_time - start_time}
+        return path, stats
     
     if start not in graph.nodes():
         return None

@@ -1,5 +1,11 @@
 from math import inf
+from timeit import default_timer as timer
+
 def algorithm(graph, start, end):
+    # For statistics
+    operations = 0
+    start_time = timer()
+    
     unvisited = list(graph)
     shortest = {}
     previous = {start: -1}
@@ -19,7 +25,10 @@ def algorithm(graph, start, end):
                 shortest[connection] = edgeval
                 previous[connection] = curr_min
         unvisited.remove(curr_min)
-    return backtrack(start, end, previous)
+    end_time = timer()
+    stats = {"Time_Secs": end_time - start_time}
+
+    return backtrack(start, end, previous), stats
 
 
 def backtrack(start, end, prev): 

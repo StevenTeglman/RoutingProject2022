@@ -1,7 +1,11 @@
 import util.graph as gr
 from math import inf
+from timeit import default_timer as timer
 
 def algorithm(graph, start, end):
+    # For statistics
+    start_time = timer()
+    
     unvisited = list(graph)
     total_cost = {}
     cost_plus_hueristics = {}
@@ -32,7 +36,10 @@ def algorithm(graph, start, end):
                 cost_plus_hueristics[neighbour] = total_edge_cost
                 previous[neighbour] = current_node
         unvisited.remove(current_node)
-    return backtrack(start, end, previous)
+    end_time = timer()
+    stats = {"Time_Secs": end_time - start_time}
+    return backtrack(start, end, previous), stats                
+
 
 
 def backtrack(start, end, prev): 

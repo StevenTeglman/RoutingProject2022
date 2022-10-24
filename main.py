@@ -8,19 +8,20 @@ from algorithms import breadth_first
 from algorithms import depth_first
 from algorithms import dijkstra
 from algorithms import a_star
+from algorithms import greedy_best_first
 
 # Initialise empty graph G
 G = graph.create_weighted_graph(5,5)
 
 # Run your chosen algorithm and get a path back.
-path = dijkstra.algorithm(G, 0, 18)
-# path = a_star.algorithm(G, 0, 18)
-# path = breadth_first.algorithm(G,0,18)
+# path, stats = dijkstra.algorithm(G, 0, 18)
+path, stats = a_star.algorithm(G, 0, 18)
+# path, stats = breadth_first.non_recursive_algorithm(G,0,18)
 # path = list(depth_first.algorithm(G,0,18))
-# path = list(bre.algorithm(G,0,18))
-# path = list(bre.algorithm(G,0,18))
+# path, stats = list(greedy_best_first.algorithm(G,0,18))
 
 
+print(stats)
 # Add path as edges to G
 for i in range((len(path) - 1)):
     G[path[0+i]][path[1+i]]['color']="r"
@@ -34,7 +35,6 @@ colors = nx.get_edge_attributes(G,'color').values()
 weights = nx.get_edge_attributes(G,'weight').values()
 thickness = nx.get_edge_attributes(G,'thickness').values()
 labels = nx.get_edge_attributes(G,'weight')
-
 
 plt.figure(figsize=(15, 10))
 nx.draw(G, pos, node_size=1000, node_color='#43C3FF', with_labels=True, font_color='white', edge_color=colors, width=list(thickness))
