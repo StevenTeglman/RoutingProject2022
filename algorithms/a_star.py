@@ -4,7 +4,6 @@ from timeit import default_timer as timer
 
 def algorithm(graph, start, end):
     # For statistics
-    operations = 0
     start_time = timer()
     
     unvisited = list(graph)
@@ -19,7 +18,6 @@ def algorithm(graph, start, end):
     cost_plus_hueristics[start] = 0
     total_cost[start] = 0
     while len(unvisited):
-        operations += 1
         # print(total_cost)
         current_node = None
         for v in unvisited:
@@ -39,7 +37,7 @@ def algorithm(graph, start, end):
                 previous[neighbour] = current_node
         unvisited.remove(current_node)
     end_time = timer()
-    stats = {"Operations": operations, "Time_Secs": end_time - start_time}
+    stats = {"Time_Secs": end_time - start_time}
     return backtrack(start, end, previous), stats                
 
 

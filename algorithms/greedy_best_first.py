@@ -8,7 +8,6 @@ def algorithm(graph, start, end):
         return node.get('heuristic')
     
     # For statistics
-    operations = 0
     start_time = timer()
     
     # Function variables
@@ -25,12 +24,10 @@ def algorithm(graph, start, end):
         current_node = queue.pop(0)
         path.append(current_node["Node"])
         for neighbor in graph[current_node["Node"]]:
-            operations += 1
             if neighbor not in visited:
                 if neighbor == end:
                     end_time = timer()
-                    stats = {"Operations": operations,
-                             "Time_Secs": end_time - start_time}
+                    stats = {"Time_Secs": end_time - start_time}
                     return path, stats
                 else:
                     visited.append(neighbor)

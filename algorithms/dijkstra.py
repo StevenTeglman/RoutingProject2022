@@ -13,7 +13,6 @@ def algorithm(graph, start, end):
         shortest[v] = inf
     shortest[start] = 0
     while len(unvisited):
-        operations += 1
         curr_min = None
         for v in unvisited:
             if curr_min == None or shortest[v] < shortest[curr_min]: 
@@ -27,8 +26,7 @@ def algorithm(graph, start, end):
                 previous[connection] = curr_min
         unvisited.remove(curr_min)
     end_time = timer()
-    stats = {"Operations": operations,
-             "Time_Secs": end_time - start_time}
+    stats = {"Time_Secs": end_time - start_time}
 
     return backtrack(start, end, previous), stats
 
