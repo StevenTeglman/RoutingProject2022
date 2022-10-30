@@ -11,14 +11,23 @@ from algorithms import a_star
 from algorithms import greedy_best_first
 
 # Initialise empty graph G
-G = graph.create_weighted_graph(5,5)
+#G = graph.create_weighted_graph(5,5)
+#G = graph.PresetGraph1(10)
+start = int(input("Enter a number for the start node: "))
+end = int(input("Enter a number for the goal node: "))
+#G = graph.GraphPreset1(10)
+#G = graph.GraphPreset2(10)
+#G = graph.GraphPreset3(10)
+#G = graph.GraphPreset4(10)
+G = graph.GraphPreset5(10)
 
-# Run your chosen algorithm and get a path back.
-# path, stats = dijkstra.algorithm(G, 0, 18)
-path, stats = a_star.algorithm(G, 0, 18)
-# path, stats = breadth_first.non_recursive_algorithm(G,0,18)
-# path = list(depth_first.algorithm(G,0,18))
-# path, stats = list(greedy_best_first.algorithm(G,0,18))
+
+#Run your chosen algorithm and get a path back.
+#path, stats = dijkstra.algorithm(G, start, end)
+path, stats = a_star.algorithm(G, start, end)
+# path, stats = breadth_first.non_recursive_algorithm(G,start,end)
+# path = list(depth_first.algorithm(G,start,end))
+#path, stats = list(greedy_best_first.algorithm(G,start,end))
 
 
 print(stats)
@@ -35,8 +44,10 @@ colors = nx.get_edge_attributes(G,'color').values()
 weights = nx.get_edge_attributes(G,'weight').values()
 thickness = nx.get_edge_attributes(G,'thickness').values()
 labels = nx.get_edge_attributes(G,'weight')
+nodeColor = nx.get_node_attributes(G,'color').values()
+
 
 plt.figure(figsize=(15, 10))
-nx.draw(G, pos, node_size=1000, node_color='#43C3FF', with_labels=True, font_color='white', edge_color=colors, width=list(thickness))
+nx.draw(G, pos, node_size=1000, node_color=nodeColor, with_labels=True, font_color='white', edge_color=colors, width=list(thickness))
 nx.draw_networkx_edge_labels(G,pos,edge_labels=labels)
 plt.show()
