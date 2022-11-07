@@ -12,14 +12,11 @@ from algorithms import greedy_best_first
 
 # Initialise empty graph G
 #G = graph.create_weighted_graph(5,5)
-#G = graph.PresetGraph1(10)
 start = int(input("Enter a number for the start node: "))
 end = int(input("Enter a number for the goal node: "))
-#G = graph.GraphPreset1(10)
+G = graph.GraphPreset1(10)
 #G = graph.GraphPreset2(10)
 #G = graph.GraphPreset3(10)
-#G = graph.GraphPreset4(10)
-G = graph.GraphPreset5(10)
 
 
 #Run your chosen algorithm and get a path back.
