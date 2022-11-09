@@ -2,10 +2,11 @@ import math
 import random
 import networkx as nx
 import numpy as np
+import math
 
 def create_unweighted_graph(x: int, y: int):
     # Initialise empty graph G
-    G = nx.Graph()
+    G = nx.DiGraph()
 
     # Create 120 vertex labels
     vertices = np.arange(0, x*y, 1)
@@ -19,7 +20,7 @@ def create_unweighted_graph(x: int, y: int):
             v = layers[j][i]
             
             # For each vertex, store vertex label and layer/column position 0-11
-            G.add_node(v, layer=i)
+            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf)
             
             # For each vertex, store edge to each vertex
             # Right
@@ -50,6 +51,10 @@ def create_unweighted_graph(x: int, y: int):
     for i in e:
         G[i[0]][i[1]]['color']="black"
         G[i[0]][i[1]]['weight']=1
+        G[i[0]][i[1]]['thickness']=1
+        G[i[0]][i[1]]['is_disturbance']=False
+        G[i[0]][i[1]]['style']='solid'
+        
         
     return G
 
@@ -68,7 +73,7 @@ def create_weighted_graph(x: int, y: int):
         for j in range(x):
             v = layers[j][i]
             # For each vertex, store vertex label and layer/column position 0-11
-            G.add_node(v, layer=i,color='#43C3FF')
+            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf)
             
             # For each vertex, store edge to each vertex
             # Right
@@ -109,56 +114,75 @@ def create_weighted_graph(x: int, y: int):
         
     return G
 
-def CreateObstacles(x,y,step,graph):
+def create_obstacle(x,y,step,graph):
         #find all neighbors of nodes between x and y
-        for i in range(x,y,step):
+        for i in range(x,y+1,step):
             neighbors = graph.neighbors(i) 
             #remove edges connected to the obstacles
             for ne in list(neighbors):
                     graph.remove_edge(i,ne)
 
-            #color the removed nodes(obstacles) as black
+            #color the removed nodes(obstacles) black
             n=graph.nodes()        
             n[i]['color']='black'       
 
+def create_dangers(start,end,graph,step=1):
+
+        for i in range(start,end+1,step):
+
+            #color the selected nodes and set safety to 0
+            n=graph.nodes()
+            n[i]['color']='red'
+            n[i]['safety_value']=0
+
+def create_disturbances_between_nodes(start, end, graph):
+    graph[start][end]['is_disturbance']=True
+    graph[start][end]['style']='dashed'
 
 
-
-def GraphPreset1(n):
-    G = create_weighted_graph(n,n)
-    CreateObstacles(24,76,10,G)
-
+def graph_preset_1():
+    G = create_unweighted_graph(10,10)
+    create_obstacle(1,71,10,G)
+    create_obstacle(32,35,1,G)
+    create_obstacle(15,25,10,G)
+    create_obstacle(36,37,1,G)
+    create_obstacle(73,77,1,G)
+    create_obstacle(87,97,10,G)
+    create_obstacle(53,57,1,G)
+    create_obstacle(58,88,10,G)
     return G
 
-def GraphPreset2(n):
-    G = create_weighted_graph(n,n)
-    CreateObstacles(63,84,10,G)
-    CreateObstacles(23,28,1,G)
-
+def graph_preset_2():
+    G = create_unweighted_graph(10,10)
+    create_obstacle(11,88,3,G)
     return G
 
-
-def GraphPreset3(n):
-    G = create_weighted_graph(n,n)
-    CreateObstacles(31,58,2,G)
-
+def graph_preset_3():
+    G = create_unweighted_graph(10,10)
+    create_obstacle(10,90,10,G)
+    create_obstacle(2,32,10,G)
+    create_obstacle(52,92,10,G)
+    create_obstacle(94,98,1,G)
+    create_obstacle(56,86,10,G)
+    create_obstacle(86,88,1,G)
+    create_obstacle(56,78,10,G)
+    create_obstacle(17,47,10,G)
+    create_obstacle(47,48,1,G)
+    create_obstacle(68,69,1,G)
+    create_obstacle(3,33,10,G)
+    create_obstacle(4,5,1,G)
+    create_obstacle(15,35,10,G)
+    create_obstacle(53,93,10,G)
+    create_obstacle(54,54,1,G)
+    create_obstacle(75,85,10,G)
+    create_obstacle(9,29,10,G)
     return G
 
-def GraphPreset4(n):
-    G = create_weighted_graph(n,n)
-    CreateObstacles(11,88,3,G)
-
+def graph_preset_4():
+    G = create_unweighted_graph(10,10)
+    create_dangers(0,9,G)
+    create_disturbances_between_nodes(10,0,G)
     return G
-
-def GraphPreset5(n):
-    G = create_weighted_graph(n,n)
-    CreateObstacles(11,81,10,G)
-    CreateObstacles(13,83,10,G)
-    CreateObstacles(15,85,10,G)
-    CreateObstacles(17,87,10,G)
-
-    return G
-
 
 def get_specific_manhattan(start, stop, graph):
     dist = dict(nx.all_pairs_shortest_path_length(graph))
