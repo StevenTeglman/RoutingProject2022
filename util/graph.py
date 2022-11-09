@@ -4,6 +4,88 @@ import networkx as nx
 import numpy as np
 import math
 
+def create_unweighted_multidigraph(x: int, y: int):
+    # Initialise empty graph G
+    G = nx.MultiDiGraph()
+
+    # Create 120 vertex labels
+    vertices = np.arange(0, x*y, 1)
+
+    # Reshape to emulate 12x10 crop patch
+    layers = vertices.reshape((x, y))
+    
+    # Add vertices and edges to G
+    for i in range(y):
+        for j in range(x):
+            v = layers[j][i]
+            
+            # For each vertex, store vertex label and layer/column position 0-11
+            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf)
+            
+            # For each vertex, store edge to each vertex
+            # Right
+            if i == y-1:
+                pass
+            else:
+                G.add_edge(v, v+1, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+
+            #Left
+            if i == 0:
+                pass
+            else:
+                G.add_edge(v, v-1, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+
+            #Up
+            if v < y:
+                pass
+            else:
+                G.add_edge(v, v-y, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+
+            #Down
+            if v > layers[-2][-1]:
+                pass
+            else:
+                G.add_edge(v, v+y, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+    
+    # edges = G.edges()
+    # print(G.edges)
+    # new_edges = []
+    # for edge in edges:
+    #     node_from, node_to = edge
+    #     new_node = (node_from, 
+    #                 node_to,
+    #                 0, 
+    # {"color":"black",
+    # "weight":1,
+    # "thickness":1,
+    # "is_disturbance":False,
+    # "style":"solid"
+    # }
+    #                 )
+    #     new_edges.append(new_node)
+    # G.update(new_edges)
+    return G
+
 def create_unweighted_graph(x: int, y: int):
     # Initialise empty graph G
     G = nx.DiGraph()
@@ -136,8 +218,18 @@ def create_dangers(start,end,graph,step=1):
             n[i]['safety_value']=0
 
 def create_disturbances_between_nodes(start, end, graph):
-    graph[start][end]['is_disturbance']=True
-    graph[start][end]['style']='dashed'
+    new_node = (start, 
+                end, 
+                    {
+                        "color":"black",
+                        "weight":1,
+                        "thickness":1,
+                        "is_disturbance":False,
+                        "style":'solid'
+                    }
+                )
+    new_edges = [new_node]
+    graph.add_edges_from(new_edges)
 
 
 def graph_preset_1():
@@ -179,9 +271,9 @@ def graph_preset_3():
     return G
 
 def graph_preset_4():
-    G = create_unweighted_graph(10,10)
+    G = create_unweighted_multidigraph(10,10)
     create_dangers(0,9,G)
-    create_disturbances_between_nodes(10,0,G)
+    # create_disturbances_between_nodes(10,0,G)
     return G
 
 def get_specific_manhattan(start, stop, graph):
