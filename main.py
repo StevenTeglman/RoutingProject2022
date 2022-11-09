@@ -16,18 +16,18 @@ from algorithms import greedy_best_first
 start = int(input("Enter a number for the start node: "))
 end = int(input("Enter a number for the goal node: "))
 #G = graph.GraphPreset1(10)
-#G = graph.GraphPreset2(10)
-#G = graph.GraphPreset3(10)
-#G = graph.GraphPreset4(10)
-G = graph.GraphPreset5(10)
+# G = graph.GraphPreset2(10)
+G = graph.GraphPreset3(10)
+# G = graph.GraphPreset4(10)
+# G = graph.GraphPreset5(10)
 
 
 #Run your chosen algorithm and get a path back.
 #path, stats = dijkstra.algorithm(G, start, end)
-path, stats = a_star.algorithm(G, start, end)
+# path, stats = a_star.algorithm(G, start, end)
 # path, stats = breadth_first.non_recursive_algorithm(G,start,end)
 # path = list(depth_first.algorithm(G,start,end))
-#path, stats = list(greedy_best_first.algorithm(G,start,end))
+path, stats = list(greedy_best_first.algorithm(G,start,end))
 
 
 print(stats)

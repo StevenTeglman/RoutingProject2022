@@ -1,3 +1,4 @@
+import math
 import random
 import networkx as nx
 import numpy as np
@@ -66,7 +67,6 @@ def create_weighted_graph(x: int, y: int):
     for i in range(y):
         for j in range(x):
             v = layers[j][i]
-            
             # For each vertex, store vertex label and layer/column position 0-11
             G.add_node(v, layer=i,color='#43C3FF')
             
