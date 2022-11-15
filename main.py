@@ -3,7 +3,7 @@ from turtle import color
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
-from util import graph
+from util import graph, robustness
 from algorithms import breadth_first
 from algorithms import depth_first
 from algorithms import dijkstra
@@ -15,8 +15,10 @@ from algorithms import greedy_best_first
 # start = int(input("Enter a number for the start node: "))
 # end = int(input("Enter a number for the goal node: "))
 # G = graph.graph_preset_2()
-G = graph.graph_preset_3()
-# G = graph.graph_preset_4()
+# G = graph.graph_preset_3()
+G = graph.graph_preset_4()
+
+G = robustness.robustness_calculation(G)
 
 
 ## Run your chosen algorithm and get a path back.
@@ -47,8 +49,7 @@ node_label = nx.get_node_attributes(G,'safety_value')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
 
-
-plt.figure(figsize=(40, 40))
+plt.figure(figsize=(10, 10))
 
 ax = plt.gca()
 for e in G.edges:
