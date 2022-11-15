@@ -290,6 +290,15 @@ def graph_preset_5():
     create_disturbances_between_nodes(20, 21, G)
     return G
 
+def graph_preset_6():
+    G = create_unweighted_multidigraph(4,4)
+    create_dangers(0,3,G)
+    # Create 2 horizontal levels of disturbances pointing north.
+    for i in range(0,4):
+        create_disturbances_between_nodes(i+4, i, G)
+        create_disturbances_between_nodes(i+8, i+4, G)
+    return G
+
 def get_specific_manhattan(start, stop, graph):
     dist = dict(nx.all_pairs_shortest_path_length(graph))
     return dist[start][stop]
