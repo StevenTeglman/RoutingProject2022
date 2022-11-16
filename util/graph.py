@@ -1,7 +1,89 @@
+import math
 import random
 import networkx as nx
 import numpy as np
 import math
+
+def create_unweighted_multidigraph(x: int, y: int):
+    # Initialise empty graph G
+    G = nx.MultiDiGraph()
+
+    # Create 120 vertex labels
+    vertices = np.arange(0, x*y, 1)
+
+    # Reshape to emulate 12x10 crop patch
+    layers = vertices.reshape((x, y))
+    
+    # Add vertices and edges to G
+    for i in range(y):
+        for j in range(x):
+            v = layers[j][i]
+            
+            # For each vertex, store vertex label and layer/column position 0-11
+            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf, is_obstacle=False)
+            
+            # For each vertex, store edge to each vertex
+            # Right
+            if i == y-1:
+                pass
+            else:
+                G.add_edge(v, v+1, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+
+            #Left
+            if i == 0:
+                pass
+            else:
+                G.add_edge(v, v-1, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+
+            #Up
+            if v < y:
+                pass
+            else:
+                G.add_edge(v, v-y, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+
+            #Down
+            if v > layers[-2][-1]:
+                pass
+            else:
+                G.add_edge(v, v+y, color="black",
+                                    weight=1,
+                                    thickness=1,
+                                    is_disturbance=False,
+                                    style="solid"
+                                    )
+    
+    edges = G.edges()
+    new_edges = []
+    for edge in edges:
+        node_from, node_to = edge
+        new_node = (node_from, 
+                    node_to,
+                    0, 
+    {"color":"black",
+    "weight":1,
+    "thickness":1,
+    "is_disturbance":False,
+    "style":"solid"
+    }
+                    )
+        new_edges.append(new_node)
+    G.update(new_edges)
+    return G
 
 def create_unweighted_graph(x: int, y: int):
     # Initialise empty graph G
@@ -71,7 +153,6 @@ def create_weighted_graph(x: int, y: int):
     for i in range(y):
         for j in range(x):
             v = layers[j][i]
-            
             # For each vertex, store vertex label and layer/column position 0-11
             G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf)
             
@@ -101,9 +182,6 @@ def create_weighted_graph(x: int, y: int):
                 G.add_edge(v, v+y)
 
 
-            
-
-    
     e = G.edges()
     for i in e:
         G[i[0]][i[1]]['color']="black"
@@ -114,17 +192,20 @@ def create_weighted_graph(x: int, y: int):
         
     return G
 
-def create_obstacle(x,y,step,graph):
-        #find all neighbors of nodes between x and y
-        for i in range(x,y+1,step):
-            neighbors = graph.neighbors(i) 
-            #remove edges connected to the obstacles
-            for ne in list(neighbors):
-                    graph.remove_edge(i,ne)
+def create_obstacle(start, end, step, graph):
+        # Find all neighbors of nodes between start and end
+        for i in range(start, end+1, step):
+            edges = graph.edges(i) 
+            # Remove edges connected to the obstacles
+            for edge in list(edges):
+                graph.remove_edge(edge[0],edge[1])
+                while (edge[1], edge[0]) in graph.edges(edge[1]):
+                    graph.remove_edge(edge[1],edge[0])
 
-            #color the removed nodes(obstacles) black
+            # Color the removed nodes(obstacles) black
             n=graph.nodes()        
             n[i]['color']='black'       
+            n[i]['is_obstacle']= True       
 
 def create_dangers(start,end,graph,step=1):
 
@@ -136,8 +217,18 @@ def create_dangers(start,end,graph,step=1):
             n[i]['safety_value']=0
 
 def create_disturbances_between_nodes(start, end, graph):
-    graph[start][end]['is_disturbance']=True
-    graph[start][end]['style']='dashed'
+    new_node = (start, 
+                end, 
+                    {
+                        "color":"black",
+                        "weight":1,
+                        "thickness":1,
+                        "is_disturbance":True,
+                        "style":'dashed'
+                    }
+                )
+    new_edges = [new_node]
+    graph.add_edges_from(new_edges)
 
 
 def graph_preset_1():
@@ -158,7 +249,7 @@ def graph_preset_2():
     return G
 
 def graph_preset_3():
-    G = create_unweighted_graph(10,10)
+    G = create_unweighted_multidigraph(10,10)
     create_obstacle(10,90,10,G)
     create_obstacle(2,32,10,G)
     create_obstacle(52,92,10,G)
@@ -179,9 +270,33 @@ def graph_preset_3():
     return G
 
 def graph_preset_4():
-    G = create_unweighted_graph(10,10)
+    G = create_unweighted_multidigraph(10,10)
     create_dangers(0,9,G)
-    create_disturbances_between_nodes(10,0,G)
+    # Create 2 horizontal levels of disturbances pointing north.
+    for i in range(0,10):
+        create_disturbances_between_nodes(i+10, i, G)
+        create_disturbances_between_nodes(i+20, i+10, G)
+    create_obstacle(10,14,2,G)
+    create_obstacle(20,24,1,G)
+    return G
+
+def graph_preset_5():
+    G = create_unweighted_multidigraph(10,10)
+    create_dangers(0,9,G)
+    # Create 2 horizontal levels of disturbances pointing north.
+    for i in range(0,10):
+        create_disturbances_between_nodes(i+10, i, G)
+        create_disturbances_between_nodes(i+20, i+10, G)
+    create_disturbances_between_nodes(20, 21, G)
+    return G
+
+def graph_preset_6():
+    G = create_unweighted_multidigraph(4,4)
+    create_dangers(0,3,G)
+    # Create 2 horizontal levels of disturbances pointing north.
+    for i in range(0,4):
+        create_disturbances_between_nodes(i+4, i, G)
+        create_disturbances_between_nodes(i+8, i+4, G)
     return G
 
 def get_specific_manhattan(start, stop, graph):
