@@ -5,7 +5,7 @@ def algorithm(graph, start, end):
     # For statistics
     operations = 0
     start_time = timer()
-    
+    key = 0
     unvisited = list(graph)
     shortest = {}
     previous = {start: -1}
@@ -18,9 +18,9 @@ def algorithm(graph, start, end):
             if curr_min == None or shortest[v] < shortest[curr_min]: 
                 curr_min = v
         connections = graph[curr_min]
-
+        
         for connection in connections:
-            edgeval = shortest[curr_min] + graph[curr_min][connection]['weight'] #assume each edge weight is equal (= 1)
+            edgeval = shortest[curr_min] + graph[curr_min][connection][key]['weight'] #assume each edge weight is equal (= 1)
             if edgeval < shortest[connection]:
                 shortest[connection] = edgeval
                 previous[connection] = curr_min
