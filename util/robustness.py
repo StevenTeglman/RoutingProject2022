@@ -57,7 +57,7 @@ def calculate_disturbance_values(graph):
 
 def robustness_calculation(graph):
     comparison_nodes = [(node, graph.nodes[node]['safety_value']) for node in graph.nodes() if graph.nodes[node]['safety_value'] != math.inf and not graph.nodes[node]['is_obstacle']]
-    old_comparison_nodes =[]
+    old_comparison_nodes = []
     while comparison_nodes != old_comparison_nodes:    
         graph = calculate_edge_values(graph)
         graph = calculate_disturbance_values(graph)

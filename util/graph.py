@@ -204,7 +204,7 @@ def create_obstacle(start, end, step, graph):
 
             # Color the removed nodes(obstacles) black
             n=graph.nodes()        
-            n[i]['color']='black'       
+            n[i]['color']='white'       
             n[i]['is_obstacle']= True       
 
 def create_dangers(start,end,graph,step=1):
@@ -230,6 +230,28 @@ def create_disturbances_between_nodes(start, end, graph):
     new_edges = [new_node]
     graph.add_edges_from(new_edges)
 
+
+def graph_random(size_x, size_y):
+    G = create_unweighted_multidigraph(size_x,size_y)
+    #create_dangers(0,size_x-1,G)
+    create_dangers(23, 25, G)
+    # Create 2 horizontal levels of disturbances pointing north.
+    for i in range(0,size_x):
+        create_disturbances_between_nodes(i+size_x, i, G)
+        create_disturbances_between_nodes(i+(size_x*2), i+size_x, G)
+    
+    all_nodes = G.nodes()
+    obstacle_nodes = []
+    for node in all_nodes:
+        if node not in obstacle_nodes and all_nodes[node]['safety_value'] != 0:
+            is_obstacle_origin = random.randint(0, size_x-1) <= 1 
+            if(is_obstacle_origin):
+                obstacle_length = random.randint(1, 3)
+                print(obstacle_nodes)
+                create_obstacle(node, (node+obstacle_length)-1, 1, G)
+                obstacle_nodes += [i for i in range(node, node + obstacle_length)]
+    #create_obstacle(10,14,2,G)
+    return G
 
 def graph_preset_1():
     G = create_unweighted_graph(10,10)

@@ -16,7 +16,7 @@ from algorithms import greedy_best_first
 # end = int(input("Enter a number for the goal node: "))
 # G = graph.graph_preset_2()
 # G = graph.graph_preset_3()
-G = graph.graph_preset_4()
+G = graph.graph_random(15,15)
 
 G = robustness.robustness_calculation(G)
 
@@ -49,7 +49,7 @@ node_label = nx.get_node_attributes(G,'safety_value')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
 
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(15, 15))
 
 ax = plt.gca()
 for e in G.edges:
