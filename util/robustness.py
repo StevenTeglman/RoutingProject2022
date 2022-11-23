@@ -2,7 +2,7 @@ import math
 
 def calculate_edge_values(graph):
     for node in graph.nodes():
-        if graph.nodes[node]['is_obstacle']:
+        if graph.nodes[node]['is_obstacle'] or graph.nodes[node]['is_danger']:
             continue
         current_node_safety = graph.nodes[node]['safety_value']
         max_safety_value = 0
@@ -22,7 +22,7 @@ def calculate_edge_values(graph):
 
 def calculate_disturbance_values(graph):
     for node in graph.nodes():
-        if graph.nodes[node]['is_obstacle']:
+        if graph.nodes[node]['is_obstacle'] or graph.nodes[node]['is_danger']:
             continue
         
         normal_edges = []

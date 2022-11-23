@@ -20,7 +20,7 @@ def create_unweighted_multidigraph(x: int, y: int):
             v = layers[j][i]
             
             # For each vertex, store vertex label and layer/column position 0-11
-            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf, is_obstacle=False)
+            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf, is_obstacle=False, is_danger=False)
             
             # For each vertex, store edge to each vertex
             # Right
@@ -206,6 +206,7 @@ def create_obstacle(start, end, step, graph):
             n=graph.nodes()        
             n[i]['color']='white'       
             n[i]['is_obstacle']= True       
+            n[i]['is_danger']= False       
 
 def create_dangers(start,end,graph,step=1):
 
@@ -215,6 +216,7 @@ def create_dangers(start,end,graph,step=1):
             n=graph.nodes()
             n[i]['color']='red'
             n[i]['safety_value']=0
+            n[i]['is_danger']=True
 
 def create_disturbances_between_nodes(start, end, graph):
     new_node = (start, 
