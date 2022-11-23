@@ -130,3 +130,5 @@ dmypy.json
 networkx_testing.py
 stevens_networkx.py
 scratch.py
+act.bat
+positions.pickle
