@@ -16,7 +16,7 @@ from algorithms import greedy_best_first
 # end = int(input("Enter a number for the goal node: "))
 # G = graph.graph_preset_2()
 # G = graph.graph_preset_3()
-G = graph.graph_random(15,15)
+G = graph.graph_random(10, 'right')
 
 G = robustness.robustness_calculation(G)
 
