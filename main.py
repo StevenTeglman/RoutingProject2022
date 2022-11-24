@@ -15,10 +15,11 @@ from algorithms import greedy_best_first
 # start = int(input("Enter a number for the start node: "))
 # end = int(input("Enter a number for the goal node: "))
 # G = graph.graph_preset_2()
-# G = graph.graph_preset_3()
-G = graph.graph_preset_4()
+G = graph.graph_preset_3()
+# G = graph.graph_preset_4()
+# G = graph.create_unweighted_multidigraph(10,10)
 
-G = robustness.robustness_calculation(G)
+# G = robustness.robustness_calculation(G)
 
 
 ## Run your chosen algorithm and get a path back.
@@ -27,13 +28,21 @@ G = robustness.robustness_calculation(G)
 # path, stats = breadth_first.non_recursive_algorithm(G,start,end)
 # path = list(depth_first.algorithm(G,start,end))
 # path, stats = list(greedy_best_first.algorithm(G,start,end))
+path, stats = a_star.algorithm2(G, 0, 99)
 
 
-# print(stats)
+print(path, stats)
 ## Add path as edges to G
-# for i in range((len(path) - 1)):
-#     G[path[0+i]][path[1+i]]['color']="g"
-#     G[path[0+i]][path[1+i]]['thickness']=1.5
+for e in G.edges:
+    for i in range((len(path) - 1)):
+        G[path[0+i]][path[1+i]][e[2]]['color']="g"
+        G[path[0+i]][path[1+i]][e[2]]['thickness']=1.5
+for node in path:
+    G.nodes[node]['color'] = 'g'
+
+G.nodes[path[0]]['color'] = 'darkblue'
+G.nodes[path[-1]]['color'] = 'darkseagreen'
+
 
 ## Set vertex positioning to layers of straight lines
 
