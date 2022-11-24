@@ -9,6 +9,7 @@ def algorithm2(graph, start, end):
     
     # Add the start node in a tuple with the format ([PATH], TOTAL_COST)
     # to the frontier.
+    visited_frontier = []
     frontier = [([start], 0)]
     while frontier:
         frontier_node_to_expand = frontier.pop(0)
@@ -32,21 +33,23 @@ def algorithm2(graph, start, end):
                         neighbors.append(k)
                         break
         
-        print(f"Current Path: {current_path}")
+        # print(f"Current Path: {current_path}")
         # Add each neighbor to the frontier, with their total cost
         for neighbor in neighbors:
-            graph.nodes[neighbor]['color'] = 'orange'
-            new_path = []
-            new_path = current_path.copy()
-            new_path.append(neighbor)
-            new_frontier_cost = len(new_path)-1
-            new_frontier_heuristics = nx.shortest_path_length(graph, source=neighbor, target=end)
-            new_frontier_total_cost = new_frontier_cost + new_frontier_heuristics
-            new_frontier_path = (new_path, new_frontier_total_cost)
-            frontier.append(new_frontier_path)
+            if neighbor not in visited_frontier:
+                visited_frontier.append(neighbor)
+                graph.nodes[neighbor]['color'] = 'orange'
+                new_path = []
+                new_path = current_path.copy()
+                new_path.append(neighbor)
+                new_frontier_cost = len(new_path)-1
+                new_frontier_heuristics = nx.shortest_path_length(graph, source=neighbor, target=end)
+                new_frontier_score = new_frontier_cost + new_frontier_heuristics
+                new_frontier_path = (new_path, new_frontier_score)
+                frontier.append(new_frontier_path)
         
         frontier.sort(key=lambda x:x[1])
-        print(frontier)
+        # print(f"Current Frontier: {frontier}\n")
             
             
         # Sort frontier with lowest cost first    

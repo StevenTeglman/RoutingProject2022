@@ -16,8 +16,8 @@ from algorithms import greedy_best_first
 # end = int(input("Enter a number for the goal node: "))
 start = 0
 end = 2499
-# G = graph.graph_preset_1()
-G = graph.graph_preset_2()
+G = graph.graph_preset_1()
+# G = graph.graph_preset_2()
 # G = graph.graph_preset_3()
 # G = graph.graph_preset_4()
 
@@ -26,11 +26,11 @@ G = graph.graph_preset_2()
 
 ## Run your chosen algorithm and get a path back.
 # path, stats = dijkstra.algorithm(G, start, end)
-path, stats = a_star.algorithm(G, start, end)
+# path, stats = a_star.algorithm(G, start, end)
 # path, stats = breadth_first.non_recursive_algorithm(G,start,end)
 # path,stats = list(depth_first.algorithm(G,start,end))
 # path, stats = list(greedy_best_first.algorithm(G,start,end))
-path, stats = a_star.algorithm2(G, 0, 99)
+path, stats = a_star.algorithm2(G, start, end)
 
 
 print(path, stats)
@@ -93,5 +93,5 @@ nx.draw_networkx_labels(G,
 
 plt.savefig('graph.svg', dpi = 1000)
 plt.axis('off')
-#plt.show()
+plt.show()
 
