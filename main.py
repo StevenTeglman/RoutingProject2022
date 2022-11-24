@@ -11,22 +11,24 @@ from algorithms import a_star
 from algorithms import greedy_best_first
 
 ## Initialise empty graph G
-# G = graph.create_weighted_graph(5,5)
+# G = graph.create_unweighted_multidigraph(50,50)
 # start = int(input("Enter a number for the start node: "))
 # end = int(input("Enter a number for the goal node: "))
-# G = graph.graph_preset_2()
-G = graph.graph_preset_3()
+start = 0
+end = 2499
+# G = graph.graph_preset_1()
+G = graph.graph_preset_2()
+# G = graph.graph_preset_3()
 # G = graph.graph_preset_4()
-# G = graph.create_unweighted_multidigraph(10,10)
 
 # G = robustness.robustness_calculation(G)
 
 
 ## Run your chosen algorithm and get a path back.
 # path, stats = dijkstra.algorithm(G, start, end)
-# path, stats = a_star.algorithm(G, start, end)
+path, stats = a_star.algorithm(G, start, end)
 # path, stats = breadth_first.non_recursive_algorithm(G,start,end)
-# path = list(depth_first.algorithm(G,start,end))
+# path,stats = list(depth_first.algorithm(G,start,end))
 # path, stats = list(greedy_best_first.algorithm(G,start,end))
 path, stats = a_star.algorithm2(G, 0, 99)
 
@@ -58,7 +60,7 @@ node_label = nx.get_node_attributes(G,'safety_value')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
 
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(50,50))
 
 ax = plt.gca()
 for e in G.edges:
@@ -87,6 +89,9 @@ nx.draw_networkx_labels(G,
                         pos,
                         font_color='white',
                         labels=node_label)
+            
 
+plt.savefig('graph.svg', dpi = 1000)
 plt.axis('off')
-plt.show()
+#plt.show()
+
