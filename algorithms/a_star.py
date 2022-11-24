@@ -1,16 +1,21 @@
 import util.graph as gr
 from math import inf
 from timeit import default_timer as timer
+import networkx as nx
 
 def algorithm(graph, start, end):
     # For statistics
     start_time = timer()
-    
+    key = 0
     unvisited = list(graph)
     total_cost = {}
     cost_plus_hueristics = {}
     previous = {start: -1}
-    hueristics = gr.get_all_manhattan(graph)
+    # hu_start_time = timer()
+    # hueristics = gr.get_all_manhattan(graph)
+    # hu_end_time = timer()
+    # hu_elapsed_time = hu_end_time - hu_start_time
+
     for v in unvisited:
         cost_plus_hueristics[v] = inf
         total_cost[v] = inf
@@ -24,13 +29,15 @@ def algorithm(graph, start, end):
             if current_node == None or cost_plus_hueristics[v] < cost_plus_hueristics[current_node]: 
                 current_node = v
         neighbours = graph[current_node]
-
+        
         for neighbour in neighbours:
-            edge_cost = total_cost[current_node] + graph[current_node][neighbour]['weight'] #assume each edge weight is equal (= 1)
-            total_edge_cost = edge_cost + hueristics[neighbour][end]
-            print("Node: " + str(neighbour))
-            print("total edge cost: " + str(total_edge_cost))
-            print("edge_cost: " + str(edge_cost) + "\n")
+            graph.nodes[neighbour]['color'] = 'orange'
+            edge_cost = total_cost[current_node] + graph[current_node][neighbour][key]['weight'] #assume each edge weight is equal (= 1)
+            # total_edge_cost = edge_cost + hueristics[neighbour][end]
+            total_edge_cost = edge_cost + nx.shortest_path_length(graph, source=current_node, target= neighbour)
+            # print("Node: " + str(neighbour))
+            # print("total edge cost: " + str(total_edge_cost))
+            # print("edge_cost: " + str(edge_cost) + "\n")
             if edge_cost < total_cost[neighbour]:
                 total_cost[neighbour] = edge_cost
                 cost_plus_hueristics[neighbour] = total_edge_cost
