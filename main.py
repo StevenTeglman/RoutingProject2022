@@ -11,29 +11,35 @@ from algorithms import a_star
 from algorithms import greedy_best_first
 
 ## Initialise empty graph G
-# G = graph.create_weighted_graph(5,5)
+# G = graph.create_unweighted_multidigraph(50,50)
 # start = int(input("Enter a number for the start node: "))
 # end = int(input("Enter a number for the goal node: "))
-# G = graph.graph_preset_2()
+start = 0
+end = 2499
+# G = graph.graph_preset_1()
+G = graph.graph_preset_2()
 # G = graph.graph_preset_3()
-G = graph.graph_random(10, 'right')
+G = graph.graph_preset_4()
 
-G = robustness.robustness_calculation(G)
+# G = robustness.robustness_calculation(G)
 
 
 ## Run your chosen algorithm and get a path back.
 # path, stats = dijkstra.algorithm(G, start, end)
-# path, stats = a_star.algorithm(G, start, end)
+path, stats = a_star.algorithm(G, start, end)
 # path, stats = breadth_first.non_recursive_algorithm(G,start,end)
-# path = list(depth_first.algorithm(G,start,end))
+# path,stats = list(depth_first.algorithm(G,start,end))
 # path, stats = list(greedy_best_first.algorithm(G,start,end))
 
 
-# print(stats)
+print(path, stats)
 ## Add path as edges to G
-# for i in range((len(path) - 1)):
-#     G[path[0+i]][path[1+i]]['color']="g"
-#     G[path[0+i]][path[1+i]]['thickness']=1.5
+for e in G.edges:
+    for i in range((len(path) - 1)):
+        G[path[0+i]][path[1+i]][e[2]]['color']="g"
+        G[path[0+i]][path[1+i]][e[2]]['thickness']=1.5
+for node in path:
+    G.nodes[node]['color'] = 'g'
 
 ## Set vertex positioning to layers of straight lines
 
@@ -49,7 +55,7 @@ node_label = nx.get_node_attributes(G,'safety_value')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
 
-plt.figure(figsize=(15, 15))
+plt.figure(figsize=(50,50))
 
 ax = plt.gca()
 for e in G.edges:
@@ -78,6 +84,9 @@ nx.draw_networkx_labels(G,
                         pos,
                         font_color='white',
                         labels=node_label)
+            
 
+plt.savefig('graph.svg', dpi = 1000)
 plt.axis('off')
-plt.show()
+#plt.show()
+
