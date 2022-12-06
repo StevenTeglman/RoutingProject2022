@@ -91,7 +91,7 @@ nx.draw_networkx_labels(G,
                         labels=node_label)
             
 
-plt.savefig('graph.svg', dpi = 1000)
+# plt.savefig('graph.svg', dpi = 1000)
 plt.axis('off')
 plt.show()
 
