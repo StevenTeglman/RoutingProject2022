@@ -1,53 +1,44 @@
 from ast import List
+import math
+import os
 from turtle import color
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import numpy as np
+from algorithms.a_star import algorithm2
 from util import graph, robustness
-from algorithms import breadth_first
 from algorithms import depth_first
-from algorithms import dijkstra
-from algorithms import a_star
-from algorithms import greedy_best_first
+import pickle
+from algorithms import backwards_dijkstra
 
-## Initialise empty graph G
-# G = graph.create_unweighted_multidigraph(50,50)
-# start = int(input("Enter a number for the start node: "))
-# end = int(input("Enter a number for the goal node: "))
-start = 0
-end = 2499
-G = graph.graph_preset_1()
-# G = graph.graph_preset_2()
-# G = graph.graph_preset_3()
-G = graph.graph_preset_4()
+# Initialise empty graph G
+G = graph.create_unweighted_multidigraph(5,5)
 
-# G = robustness.robustness_calculation(G)
+graph.create_dangers(7,7,G)
 
+graph.create_disturbances_between_nodes(6,7,G)
+graph.create_disturbances_between_nodes(5,6,G)
+graph.create_disturbances_between_nodes(11,6,G)
+graph.create_disturbances_between_nodes(8,7,G)
+graph.create_disturbances_between_nodes(12,7,G)
+graph.create_disturbances_between_nodes(17,12,G)
+graph.create_disturbances_between_nodes(22,17,G)
 
-## Run your chosen algorithm and get a path back.
-# path, stats = dijkstra.algorithm(G, start, end)
-# path, stats = a_star.algorithm(G, start, end)
-# path, stats = breadth_first.non_recursive_algorithm(G,start,end)
-# path,stats = list(depth_first.algorithm(G,start,end))
-# path, stats = list(greedy_best_first.algorithm(G,start,end))
-path, stats = a_star.algorithm2(G, start, end)
+graph.create_obstacle(17,19,1,G)
 
+robustness.robustness_calculation(G)
 
-print(path, stats)
-## Add path as edges to G
-for e in G.edges:
-    for i in range((len(path) - 1)):
-        G[path[0+i]][path[1+i]][e[2]]['color']="g"
-        G[path[0+i]][path[1+i]][e[2]]['thickness']=1.5
-for node in path:
-    G.nodes[node]['color'] = 'g'
+G = backwards_dijkstra.algorithm(G, 0, 4, 2)
+os.system('cls')
+print(f"Path to success: {G.nodes[24]['path_to_goal']}")
 
-G.nodes[path[0]]['color'] = 'darkblue'
-G.nodes[path[-1]]['color'] = 'darkseagreen'
-
-
-## Set vertex positioning to layers of straight lines
-
+for node in G.nodes():
+    sv = G.nodes[node]["safety_value"]
+    heur = G.nodes[node]["heuristic"]
+    label = f"Node: {node}\nSV: {sv}\nHeur: {heur}"
+    G.nodes[node]['label'] = label
+    
 pos = nx.multipartite_layout(G, subset_key='layer')
 
 ## Plot graph
@@ -56,11 +47,10 @@ weights = nx.get_edge_attributes(G,'weight').values()
 thickness = nx.get_edge_attributes(G,'thickness').values()
 labels = nx.get_edge_attributes(G,'weight')
 node_color = nx.get_node_attributes(G,'color').values()
-node_label = nx.get_node_attributes(G,'safety_value')
+node_label = nx.get_node_attributes(G,'label')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
-
-plt.figure(figsize=(50,50))
+plt.figure(figsize=(10,10))
 
 ax = plt.gca()
 for e in G.edges:
@@ -87,11 +77,10 @@ nx.draw_networkx_nodes(G,
 
 nx.draw_networkx_labels(G,
                         pos,
-                        font_color='white',
+                        font_color='black',
                         labels=node_label)
             
 
 # plt.savefig('graph.svg', dpi = 1000)
 plt.axis('off')
 plt.show()
-

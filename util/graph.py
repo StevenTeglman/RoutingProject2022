@@ -207,6 +207,7 @@ def create_obstacle(start, end, step, graph):
             n[i]['color']='white'       
             n[i]['is_obstacle']= True       
             n[i]['is_danger']= False       
+            n[i]['heuristic']= math.inf       
 
 def create_dangers(start,end,graph,step=1):
 

@@ -132,3 +132,8 @@ stevens_networkx.py
 scratch.py
 act.bat
 positions.pickle
+graph.svg
+MDP_Calc.py
+graph.svg
+util/mdp.py
+.svg

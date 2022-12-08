@@ -3,6 +3,61 @@ from math import inf
 from timeit import default_timer as timer
 import networkx as nx
 
+def algorithm2(graph, start, end):
+    # For statistics
+    start_time = timer()
+    
+    # Add the start node in a tuple with the format ([PATH], TOTAL_COST)
+    # to the frontier.
+    visited_frontier = []
+    frontier = [([start], 0)]
+    while frontier:
+        frontier_node_to_expand = frontier.pop(0)
+        current_path = frontier_node_to_expand[0]
+        current_path_cost = len(current_path) - 1
+        path_last_node = current_path[-1]
+        
+        
+        # If expanded node is goal, return path
+        if end == path_last_node:
+            end_time = timer()
+            stats = {"Time_Secs": end_time - start_time}
+            return current_path, stats
+        
+        # Collect all of the neighbors not connected by disturbance edges
+        neighbors = []
+        for k, v in graph[path_last_node].items():
+            for k2, v2 in v.items():
+                if not v2["is_disturbance"]:
+                    if not graph.nodes[k]["is_danger"] and not graph.nodes[k]["is_obstacle"]:
+                        neighbors.append(k)
+                        break
+        
+        # print(f"Current Path: {current_path}")
+        # Add each neighbor to the frontier, with their total cost
+        for neighbor in neighbors:
+            if neighbor not in visited_frontier:
+                visited_frontier.append(neighbor)
+                graph.nodes[neighbor]['color'] = 'orange'
+                new_path = []
+                new_path = current_path.copy()
+                new_path.append(neighbor)
+                new_frontier_cost = len(new_path)-1
+                new_frontier_heuristics = nx.shortest_path_length(graph, source=neighbor, target=end)
+                new_frontier_score = new_frontier_cost + new_frontier_heuristics
+                new_frontier_path = (new_path, new_frontier_score)
+                frontier.append(new_frontier_path)
+        
+        frontier.sort(key=lambda x:x[1])
+        # print(f"Current Frontier: {frontier}\n")
+            
+            
+        # Sort frontier with lowest cost first    
+    
+    # No path was found...
+    print("No Path Found")
+    return False, False
+
 def algorithm(graph, start, end):
     # For statistics
     start_time = timer()
