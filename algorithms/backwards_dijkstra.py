@@ -4,7 +4,6 @@ def algorithm(graph, start, end, safe_value_min):
     unvisited = list(graph)
     obstacles = [n for n,v in graph.nodes(data=True) if v['is_obstacle'] != False]
     for obstacle in obstacles:
-        
         unvisited.remove(obstacle)
     
     distances = {}
@@ -23,7 +22,6 @@ def algorithm(graph, start, end, safe_value_min):
             if current_node == None or distances[node] < distances[current_node]:
                 current_node = node
                 
-                        
         for neighbor in graph[current_node]:
             if graph.nodes[neighbor]["safety_value"] < safe_value_min:
                 continue
@@ -45,5 +43,19 @@ def algorithm(graph, start, end, safe_value_min):
             path = [current_node]
             graph.nodes[current_node]["path_to_goal"] = path + graph.nodes[lowest_heuristic_node]["path_to_goal"]
     
+    for node in graph.nodes():
+        if 'path_to_goal' in graph.nodes()[node]:
+            if len(graph.nodes()[node]['path_to_goal']) > 1:
+                graph.nodes()[node]['path_to_goal'] = graph.nodes()[node]['path_to_goal']
+
     return graph
+
+def collect_safety_values(graph):
+    safety_value_set = set()
+    for node in graph.nodes():
+        safety_value = graph.nodes()[node]['safety_value']
+        safety_value_set.add(safety_value)
     
+    safety_value_set.remove(0)
+    return list(safety_value_set)
+

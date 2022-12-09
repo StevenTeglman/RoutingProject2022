@@ -20,7 +20,15 @@ def create_unweighted_multidigraph(x: int, y: int):
             v = layers[j][i]
             
             # For each vertex, store vertex label and layer/column position 0-11
-            G.add_node(v, layer=i,color='#43C3FF', safety_value=math.inf, is_obstacle=False, is_danger=False)
+            G.add_node(v, 
+                       layer=i,
+                       color='#43C3FF', 
+                       safety_value=math.inf, 
+                       is_obstacle=False, 
+                       is_danger=False,
+                       safety_value_paths={},
+                       path_to_goal=[],
+                       sdto_path=[])
             
             # For each vertex, store edge to each vertex
             # Right
