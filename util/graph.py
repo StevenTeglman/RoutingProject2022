@@ -241,6 +241,59 @@ def create_disturbances_between_nodes(start, end, graph):
     new_edges = [new_node]
     graph.add_edges_from(new_edges)
 
+def graph_random(grid_size, wind_direction='up'):
+    G = create_unweighted_multidigraph(grid_size,grid_size)
+
+    wind_position = 0
+
+    #create_dangers(0,size_x-1,G)
+
+    # Create 2 horizontal levels of disturbances pointing north.
+    #for i in range(0,size_x):
+    #    create_disturbances_between_nodes(i+size_x, i, G)
+    #    create_disturbances_between_nodes(i+(size_x*2), i+size_x, G)
+   
+    all_nodes = G.nodes()
+    obstacle_nodes = []
+    danger_nodes = []
+    for node in all_nodes:
+        is_danger_node = random.randint(0, int(grid_size/2)) == 0
+        if is_danger_node: 
+            create_dangers(node, node, G)
+            danger_nodes += [node]
+        if node not in obstacle_nodes and all_nodes[node]['safety_value'] != 0:
+            is_obstacle_origin = random.randint(0, grid_size-1) <= 1 
+            if(is_obstacle_origin):
+                obstacle_length = random.randint(1, 3)
+                #print(obstacle_nodes)
+                create_obstacle(node, (node+obstacle_length)-1, 1, G)
+                obstacle_nodes += [i for i in range(node, node + obstacle_length)]
+                
+    obstacle_nodes_set = set(obstacle_nodes)
+    danger_nodes_set = set(danger_nodes)
+    all_nodes_set = set(all_nodes)
+    non_obstacle_nodes = list(all_nodes_set.difference(obstacle_nodes_set))
+    non_obstacle_danger_nodes = list(set(non_obstacle_nodes).difference(danger_nodes_set))
+    for non_obstacle_danger_node in non_obstacle_danger_nodes:
+        has_wind_blowing = random.randint(0, 2) == 0
+        if has_wind_blowing:
+            wind_target_node = -1
+            if(wind_direction == 'up'):
+                wind_target_node = non_obstacle_danger_node - grid_size
+            elif(wind_direction == 'down'):
+                wind_target_node = non_obstacle_danger_node + grid_size
+            elif(wind_direction == 'left'):
+                is_left_edge = non_obstacle_danger_node % grid_size == 0
+                if not is_left_edge: wind_target_node = non_obstacle_danger_node - 1
+            elif(wind_direction == 'right'):
+                is_right_edge = non_obstacle_danger_node % grid_size == grid_size - 1
+                if not is_right_edge: wind_target_node = non_obstacle_danger_node + 1
+            
+
+            if wind_target_node in non_obstacle_nodes:
+                create_disturbances_between_nodes(non_obstacle_danger_node, wind_target_node, G)
+    #create_obstacle(10,14,2,G)
+    return G
 
 def graph_preset_1():
     G = create_unweighted_multidigraph(50,50)
