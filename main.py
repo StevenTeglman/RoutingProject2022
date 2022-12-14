@@ -19,7 +19,7 @@ end = 2499
 G = graph.graph_preset_1()
 # G = graph.graph_preset_2()
 # G = graph.graph_preset_3()
-# G = graph.graph_preset_4()
+G = graph.graph_preset_4()
 
 # G = robustness.robustness_calculation(G)
 
