@@ -241,21 +241,21 @@ def create_disturbances_between_nodes(start, end, graph):
     new_edges = [new_node]
     graph.add_edges_from(new_edges)
 
-def calculate_direction_target(node, grid_size, wind_direction):
-    wind_target_node = -1
-    if(wind_direction == 'up'):
-        wind_target_node = node - grid_size
-    elif(wind_direction == 'down'):
-        wind_target_node = node + grid_size
-    elif(wind_direction == 'left'):
+def calculate_direction_target(node, grid_size, disturbance_direction):
+    disturbance_target_node = -1
+    if(disturbance_direction == 'up'):
+        disturbance_target_node = node - grid_size
+    elif(disturbance_direction == 'down'):
+        disturbance_target_node = node + grid_size
+    elif(disturbance_direction == 'left'):
         is_left_edge = node % grid_size == 0
-        if not is_left_edge: wind_target_node = node - 1
-    elif(wind_direction == 'right'):
+        if not is_left_edge: disturbance_target_node = node - 1
+    elif(disturbance_direction == 'right'):
         is_right_edge = node % grid_size == grid_size - 1
-        if not is_right_edge: wind_target_node = node + 1
-    return wind_target_node
+        if not is_right_edge: disturbance_target_node = node + 1
+    return disturbance_target_node
 
-def graph_random(grid_size, wind_direction='right', wind_chance_percentage = 25, obstacle_origin_chance = 5, obstacle_origin_max_range = 3, danger_scale=0.15):
+def graph_random(grid_size, disturbance_direction='right', disturbance_chance_percentage = 25, obstacle_origin_chance = 5, obstacle_origin_max_range = 3, danger_scale=0.15):
     '''Generates a random graph based on the parameters'''
     assert danger_scale >= 0 and danger_scale <= 1
     assert grid_size >= 1
@@ -266,7 +266,7 @@ def graph_random(grid_size, wind_direction='right', wind_chance_percentage = 25,
     obstacle_nodes = []
     for node in all_nodes:
         if node not in obstacle_nodes:
-            is_obstacle_origin = random.randint(0, 100) <= obstacle_origin_chance
+            is_obstacle_origin = random.randint(1, 101) <= obstacle_origin_chance
             if(is_obstacle_origin):
                 obstacle_length = random.randint(1, obstacle_origin_max_range)
                 create_obstacle(node, (node+obstacle_length)-1, 1, G)
@@ -281,28 +281,28 @@ def graph_random(grid_size, wind_direction='right', wind_chance_percentage = 25,
     for danger_node in danger_nodes:
         create_dangers(danger_node, danger_node, G)
 
-    nodes_with_wind = danger_nodes.copy()
+    nodes_with_disturbance = danger_nodes.copy()
     for non_obstacle_node in non_obstacle_nodes:
         if non_obstacle_node in danger_nodes:
             continue
 
-        has_wind_blowing = False
-        if non_obstacle_node in nodes_with_wind:
-            has_wind_blowing = random.randint(0, 100) <= 80 #Wind is more likely to be emitted by nodes that already have wind leading to them.
+        has_disturbance_blowing = False
+        if non_obstacle_node in nodes_with_disturbance:
+            has_disturbance_blowing = random.randint(0, 100) <= 80 #disturbance is more likely to be emitted by nodes that already have disturbance leading to them.
         else:
-            has_wind_blowing = random.randint(0, 100) <= wind_chance_percentage
+            has_disturbance_blowing = random.randint(0, 100) <= disturbance_chance_percentage
 
-        if has_wind_blowing:
-            wind_target_node = -1
-            if(wind_direction != 'random'):
-                wind_target_node = calculate_direction_target(non_obstacle_node, grid_size, wind_direction)
+        if has_disturbance_blowing:
+            disturbance_target_node = -1
+            if(disturbance_direction != 'random'):
+                disturbance_target_node = calculate_direction_target(non_obstacle_node, grid_size, disturbance_direction)
             else:
-                rnd_wind_direction = random.choice(directions)
-                wind_target_node = calculate_direction_target(non_obstacle_node, grid_size, rnd_wind_direction)
-            if wind_target_node in non_obstacle_nodes:
-                create_disturbances_between_nodes(non_obstacle_node, wind_target_node, G)
-                if wind_target_node not in nodes_with_wind:
-                    nodes_with_wind += [wind_target_node]
+                rnd_disturbance_direction = random.choice(directions)
+                disturbance_target_node = calculate_direction_target(non_obstacle_node, grid_size, rnd_disturbance_direction)
+            if disturbance_target_node in non_obstacle_nodes:
+                create_disturbances_between_nodes(non_obstacle_node, disturbance_target_node, G)
+                if disturbance_target_node not in nodes_with_disturbance:
+                    nodes_with_disturbance += [disturbance_target_node]
 
     eligible_nodes = list(set(non_obstacle_nodes).difference(danger_nodes_set))
     return (G, eligible_nodes)
