@@ -2,14 +2,14 @@ import random
 
 def traverse(graph, start, disturbance_chance):
     disturbance_counter = 0
-    path = [start]
+    path = [int(start)]
     state = (True, path, disturbance_counter)
     current_node_index = start
     current_node = graph.nodes()[current_node_index]
     #print(current_node)
     while len(current_node['sdto_path']) > 1:       
         # Set the destination of the current "step"
-        path.append(current_node_index)
+        path.append(int(current_node_index))
         predicted_index = current_node['sdto_path'][1]  
         if current_node['is_danger']:
             return (False, path, disturbance_counter)

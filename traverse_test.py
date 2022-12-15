@@ -1,12 +1,10 @@
-from util import graph, robustness, traverse_simulator
+from util import graph, robustness, traverse_simulator, experiment
 from turtle import color
 from algorithms import sdto
 import networkx as nx
 import matplotlib.pyplot as plt
-import datetime
-import json
 
-(G, eligible_nodes) = graph.graph_random(15, disturbance_direction='up', disturbance_chance_percentage=40, obstacle_origin_chance=5)
+(G, eligible_nodes) = graph.graph_random(15, disturbance_direction='up', disturbance_chance_percentage=75, obstacle_origin_chance=5)
 start = eligible_nodes[0]
 end = eligible_nodes[-1]
 
@@ -14,7 +12,8 @@ G = robustness.robustness_calculation(G)
 
 G = sdto.algorithm(G, end, 2, 2)
 
-(state, path) = traverse_simulator.traverse(G, start, 50)
+state = traverse_simulator.traverse(G, start, 50)
+path = state[1]
 
 print('actual path', path)
 
@@ -73,15 +72,4 @@ for e in G.edges:
                 )
 
 
-
-def run_simulation(number_of_iterations, graph, start, disturbance_chance):
-    result = {}
-    _now = datetime.datetime.now()
-    filename = f"{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
-
-    for current_iteration in range(number_of_iterations):
-        current_traversal = traverse_simulator.traverse(graph, start, disturbance_chance)
-        result[current_iteration] = current_traversal
-
-    with open(f"./simulation_logs/{filename}.json", "w") as file:
-        json.dump(result, file, indent=None)
+experiment.run_experiment()
