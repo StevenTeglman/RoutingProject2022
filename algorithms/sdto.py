@@ -70,8 +70,9 @@ def backwards_dijkstra_path_collection(graph, end, safety_value_min):
 def collect_safety_values(graph):
     safety_value_set = set()
     for node in graph.nodes():
-        safety_value = graph.nodes()[node]['safety_value']
-        safety_value_set.add(safety_value)
+        if not graph.nodes[node]['is_obstacle']:
+            safety_value = graph.nodes()[node]['safety_value']
+            safety_value_set.add(safety_value)
     
     safety_value_set.remove(0)
     # safety_value_set.remove(inf)
@@ -81,7 +82,7 @@ def collect_safety_values(graph):
 def algorithm(graph, end, safety_value_min, distance_saved_allowence):
     # Collect Every unique safety value
     safety_values = collect_safety_values(graph)
-    for node in graph.nodes():
+    for node in graph.nodes():  
         for safety_value in safety_values:
             graph.nodes[node]["safety_value_paths"][safety_value] = []
     
@@ -92,22 +93,26 @@ def algorithm(graph, end, safety_value_min, distance_saved_allowence):
     # Pog.
     for node in graph.nodes():
         # If no path originally exists with defined safety value, return empty list
-        if not graph.nodes[node]['safety_value_paths'][safety_value_min]:
-            graph.nodes[node]['sdto_path'] = []
-            print(f"No path exists for this node {node}")
-            continue
-        else:
-            safety_value_length_pairs = {}
-            for k,v in graph.nodes[node]['safety_value_paths'].items():
-                safety_value_length_pairs[k] = len(v)
-        
-        difference_saved = safety_value_length_pairs[safety_value_min] - safety_value_length_pairs[safety_value_min-1]
-        if difference_saved >= distance_saved_allowence:
-            graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min-1]
-        
-        else:
-            graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min]
-        
+        try:
+            if not graph.nodes[node]['safety_value_paths'][safety_value_min]:
+                graph.nodes[node]['sdto_path'] = []
+                print(f"No path exists for this node {node}")
+                continue
+            else:
+                safety_value_length_pairs = {}
+                for k,v in graph.nodes[node]['safety_value_paths'].items():
+                    safety_value_length_pairs[k] = len(v)
+
+            difference_saved = safety_value_length_pairs[safety_value_min] - safety_value_length_pairs[safety_value_min-1]
+            if difference_saved >= distance_saved_allowence:
+                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min-1]
+            
+            else:
+                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min]
+        except Exception as errormsg:
+            print('err node', graph.nodes[node])
+            print(errormsg)
+            raise Exception
         # print(safety_value_length_pairs, node)
         
     

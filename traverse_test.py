@@ -4,7 +4,7 @@ from algorithms import sdto
 import networkx as nx
 import matplotlib.pyplot as plt
 
-(G, eligible_nodes) = graph.graph_random(10, disturbance_direction='up', disturbance_chance_percentage=25, obstacle_origin_chance=5)
+(G, eligible_nodes) = graph.graph_random(15, disturbance_direction='up', disturbance_chance_percentage=40, obstacle_origin_chance=5)
 start = eligible_nodes[0]
 end = eligible_nodes[-1]
 
@@ -13,8 +13,6 @@ G = robustness.robustness_calculation(G)
 G = sdto.algorithm(G, end, 2, 2)
 
 (state, path) = traverse_simulator.traverse(G, start, 50)
-
-print(G.nodes()[start])
 
 print('actual path', path)
 
@@ -37,9 +35,9 @@ for node in path:
     G.nodes[node]['color'] = 'yellow'
 
 
-
-G.nodes[path[0]]['color'] = 'darkblue'
-G.nodes[path[-1]]['color'] = 'darkseagreen'
+if len(path) != 0:
+    G.nodes[path[0]]['color'] = 'darkblue'
+    G.nodes[path[-1]]['color'] = 'darkseagreen'
 
 pos = nx.multipartite_layout(G, subset_key='layer')
 

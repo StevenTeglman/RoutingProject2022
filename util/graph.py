@@ -215,7 +215,8 @@ def create_obstacle(start, end, step, graph):
             n[i]['color']='black'       
             n[i]['is_obstacle']= True       
             n[i]['is_danger']= False       
-            n[i]['heuristic']= math.inf       
+            n[i]['heuristic']= math.inf
+            n[i]['safety_value_paths']= {}    
 
 def create_dangers(start,end,graph,step=1):
 
@@ -226,6 +227,7 @@ def create_dangers(start,end,graph,step=1):
             n[i]['color']='red'
             n[i]['safety_value']=0
             n[i]['is_danger']=True
+            n[i]['safety_value_paths']= {}
 
 def create_disturbances_between_nodes(start, end, graph):
     new_node = (start, 
