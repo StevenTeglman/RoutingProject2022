@@ -2,7 +2,6 @@
 
 from math import inf, isinf
 
-
 def backwards_dijkstra_path_collection(graph, end, safety_value_min):
     unvisited = list(graph)
     obstacles = [n for n,v in graph.nodes(data=True) if v['is_obstacle'] != False]
