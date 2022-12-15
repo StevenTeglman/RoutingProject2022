@@ -3,16 +3,16 @@ import random
 def traverse(graph, start, disturbance_chance):
     disturbance_counter = 0
     state = (True, start, disturbance_counter)
+    path = []
     current_node_index = start
-
+    current_node = graph.nodes()[current_node_index]
     #print(current_node)
-    while current_node_index != 4: # TODO: change to current_node_index != current_node['path_to_goal']
-        current_node = graph.nodes()[current_node_index]
+    while len(current_node['sdto_path']) > 1:       
         # Set the destination of the current "step"
-        predicted_index = current_node['path_to_goal'][1]
-        
+        path.append(current_node_index)
+        predicted_index = current_node['sdto_path'][1]  
         if current_node['is_danger']:
-            return (False, int(current_node_index), disturbance_counter)    # Had to cast as int since it returned as a numpy element
+            return (False, path, disturbance_counter)
 
         for edge in graph.edges(current_node_index, data=True):
             if edge[2]['is_disturbance']:
@@ -22,6 +22,7 @@ def traverse(graph, start, disturbance_chance):
                     disturbance_counter += 1
         
         current_node_index = predicted_index
-        state = (True, current_node_index, disturbance_counter)
+        state = (True, path, disturbance_counter)
+        current_node = graph.nodes()[current_node_index]
     return state
         

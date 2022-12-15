@@ -38,7 +38,14 @@ def calculate_disturbance_values(graph):
                 disturbance_edges.append(dist_edge)
                 
         # Get Max Edge
-        max_normal_edge = max(normal_edges, key=lambda tup: tup[1])
+        if len(normal_edges) == 0:
+            graph.nodes[node]["safety_value"] = math.inf
+            continue
+
+        try:
+            max_normal_edge = max(normal_edges, key=lambda tup: tup[1])
+        except:
+            print('error', node)
         
         # Check if there are actually disturbances. If not, go to next node
         if disturbance_edges:
@@ -62,6 +69,6 @@ def robustness_calculation(graph):
         graph = calculate_edge_values(graph)
         graph = calculate_disturbance_values(graph)
         old_comparison_nodes = comparison_nodes
-        comparison_nodes = [node for node in graph.nodes() if graph.nodes[node]['safety_value'] != math.inf]
+        comparison_nodes = [(node, graph.nodes[node]['safety_value']) for node in graph.nodes() if graph.nodes[node]['safety_value'] != math.inf]
     
     return graph
