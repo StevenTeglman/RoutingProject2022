@@ -2,8 +2,8 @@ import random
 
 def traverse(graph, start, disturbance_chance):
     disturbance_counter = 0
-    state = (True, start, disturbance_counter)
-    path = []
+    path = [start]
+    state = (True, path, disturbance_counter)
     current_node_index = start
     current_node = graph.nodes()[current_node_index]
     #print(current_node)
