@@ -1,3 +1,4 @@
+from math import inf
 from util.robustness import robustness_calculation
 from util.traverse_simulator import traverse
 from algorithms.sdto import algorithm as sdto
@@ -16,7 +17,9 @@ def run_experiment(number_of_iterations=10, safety_value_min=2, disturbance_chan
     G = robustness_calculation(G)
 
     sv_min = safety_value_min
-    sv_max = max(collect_safety_values(G))
+    safety_list = collect_safety_values(G)
+    safety_list.remove(inf)
+    sv_max = max(safety_list)
     distance_saved_allowance = 2
     result = {}
     _now = datetime.now()
