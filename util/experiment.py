@@ -12,6 +12,7 @@ import os
 
 
 def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_chance=25):
+    # Create a random graph for the experiment and select start/end nodes
     (G, eligible_nodes) = graph_random(35, disturbance_direction='up', disturbance_chance_percentage=75, obstacle_origin_chance=5)
     start = eligible_nodes[0]
     end = eligible_nodes[-1]
@@ -24,11 +25,21 @@ def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_cha
     distance_saved_allowance = 2
     result = {}
     dict_keys = 0
+    
+    # Create a folder for the current experiment
     _now = datetime.now()
     foldername = f"{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
     os.mkdir(f"./simulation_logs/{foldername}")
+   
+    # Save current graph in the folder
     networkx.write_gpickle(G, f"./simulation_logs/{foldername}/graph.gpickle")
 
+    # Save the list of eligible nodes as a text file
+    with open(f"./simulation_logs/{foldername}/eligible_nodes.txt", "w") as file:
+        for line in eligible_nodes:
+            file.write(f"{line}\n")
+
+    # Traverse the graph for every safety value, @number_of_iterations amount of times
     while sv_min <= sv_max:
         G = sdto(G, end, sv_min, distance_saved_allowance)
         for current_iteration in range(number_of_iterations):
@@ -40,6 +51,7 @@ def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_cha
             
         sv_min += 1
     
+    # Convert the results into a data frame, set column names, save as a csv file
     data_frame = pandas.DataFrame.from_dict(result, orient="index", 
                                             columns=["goal_reached", "path_length", "times_disturbed", "safety_value"])
     data_frame.to_csv(f"./simulation_logs/{foldername}/data.csv")
