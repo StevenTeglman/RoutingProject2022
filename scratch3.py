@@ -2,18 +2,24 @@ from util import graph
 from algorithms import sdto
 import matplotlib.pyplot as plt
 import networkx as nx
+import pprint
 
-G = graph.create_unweighted_multidigraph(4,4)
+G = graph.create_unweighted_multidigraph(5,5)
 
+graph.create_dangers(7,7,G)
 graph.create_dangers(5,5,G)
-graph.create_disturbances_between_nodes(9,5,G)
-graph.create_disturbances_between_nodes(6,5,G)
-graph.create_disturbances_between_nodes(1,5,G)
-graph.create_disturbances_between_nodes(4,5,G)
-graph.create_disturbances_between_nodes(7,6,G)
-G = sdto.algorithm(G, 15, 2, 0)
 
-print(G.nodes[0])
+graph.create_obstacle(6, 16, 5, G)
+
+graph.create_disturbances_between_nodes(2,7,G)
+graph.create_disturbances_between_nodes(8,7,G)
+graph.create_disturbances_between_nodes(9,8,G)
+
+G = sdto.algorithm(graph=G, start=0, end=4, safety_value_min=2, distance_saved_allowence=0)
+
+pp = pprint.PrettyPrinter(indent=4, depth = 3, compact = True)
+pp.pprint(G.nodes[0])
+# print(G.nodes[0])
 # region plotty mcplotface
 ## Set vertex positioning to layers of straight lines
 

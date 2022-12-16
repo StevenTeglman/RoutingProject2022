@@ -26,6 +26,8 @@ def create_unweighted_multidigraph(x: int, y: int):
                        safety_value=math.inf, 
                        is_obstacle=False, 
                        is_danger=False,
+                       is_start=False,
+                       is_sdto_alternative=False,
                        safety_value_paths={},
                        path_to_goal=[],
                        sdto_path=[])
@@ -217,6 +219,8 @@ def create_obstacle(start, end, step, graph):
             n[i]['is_danger']= False       
             n[i]['heuristic']= math.inf
             n[i]['safety_value_paths']= {}    
+            n[i]['is_start_node']= False    
+            n[i]['is_sdto_alternative']= False    
 
 def create_dangers(start,end,graph,step=1):
 
@@ -228,6 +232,8 @@ def create_dangers(start,end,graph,step=1):
             n[i]['safety_value']=0
             n[i]['is_danger']=True
             n[i]['safety_value_paths']= {}
+            n[i]['is_start_node']= False    
+            n[i]['is_sdto_alternative']= False    
 
 def create_disturbances_between_nodes(start, end, graph):
     new_node = (start, 
