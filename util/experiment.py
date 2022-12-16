@@ -5,8 +5,9 @@ from algorithms.sdto import algorithm as sdto
 from algorithms.sdto import collect_safety_values
 from util.graph import graph_random 
 from datetime import datetime
-import os
 import pandas
+import networkx 
+import os
 
 
 
@@ -26,6 +27,7 @@ def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_cha
     _now = datetime.now()
     foldername = f"{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
     os.mkdir(f"./simulation_logs/{foldername}")
+    networkx.write_gpickle(G, f"./simulation_logs/{foldername}/graph.gpickle")
 
     while sv_min <= sv_max:
         G = sdto(G, end, sv_min, distance_saved_allowance)
