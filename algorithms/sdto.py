@@ -64,7 +64,6 @@ def backwards_dijkstra_path_collection(graph, end, safety_value_min):
         if isinf(v):
             leftover_infinity_nodes.append(k)
                 
-    print(f"Infinity Nodes: {leftover_infinity_nodes}")
     return graph
 
 def collect_safety_values(graph):
@@ -80,22 +79,26 @@ def collect_safety_values(graph):
     # safety_value_set.add(100)
     return list(safety_value_set)
 
-def algorithm(graph, end, safety_value_min, distance_saved_allowence):
+def algorithm(graph, end, start, safety_value_min, distance_saved_allowence):
     graph = robustness.robustness_calculation(graph)
     
     # Collect Every unique safety value
     safety_values = collect_safety_values(graph)
-    print(safety_values)
+
+    graph.nodes[start]["is_start"] = True
+
     # Check to see if user specified safety value in graph
     if safety_value_min not in safety_values:
         safety_values_copy = safety_values.copy()
         if inf in safety_values_copy:
             safety_values_copy.remove(inf)
         
-        print(safety_values_copy)
         # Set safety_value_min to highest none inf value
         safety_values_copy.sort()
-        safety_value_min = safety_values_copy[-1]
+        if not safety_values_copy:
+            safety_values_copy = inf
+        else:
+            safety_value_min = safety_values_copy[-1]
         
         print("\n#############################################")
         print("The chosen safety value is too high for graph")
@@ -109,13 +112,12 @@ def algorithm(graph, end, safety_value_min, distance_saved_allowence):
     for safety_value in safety_values:
         backwards_dijkstra_path_collection(graph, end, safety_value)
         
-    # Computer the SDTO
+    # Compute the SDTO
     for node in graph.nodes():
         # If no path originally exists with defined safety value, return empty list
 
         if not graph.nodes[node]['safety_value_paths'][safety_value_min]:
             graph.nodes[node]['sdto_path'] = []
-            print(f"No path exists for this node {node}")
             continue
         else:
             safety_value_length_pairs = {}
@@ -127,7 +129,8 @@ def algorithm(graph, end, safety_value_min, distance_saved_allowence):
         if safety_value_min-1 in safety_value_length_pairs:
             difference_saved = safety_value_length_pairs[safety_value_min] - safety_value_length_pairs[safety_value_min-1]
             # If distance saved is greater or equal to distance saved allowence, assign the new path to that nodes SDTO path
-            if difference_saved >= distance_saved_allowence:
+            if difference_saved > distance_saved_allowence:
+                graph.nodes[node]['is_sdto_alternative'] = True
                 graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min-1]
             
             else:
@@ -137,15 +140,19 @@ def algorithm(graph, end, safety_value_min, distance_saved_allowence):
 
         
     # Create paths out of previously unreachable nodes
+
+
+
     for node in graph.nodes():
+
         if not graph.nodes[node]['sdto_path'] and not graph.nodes[node]['is_danger'] and not graph.nodes[node]['is_obstacle']:
-            print(node)
+            if graph.nodes[node]['is_start']:
+                continue
             safety_value_keys = []
             for k, v in graph.nodes[node]['safety_value_paths'].items():
                 if v:
                     safety_value_keys.append(k)
             safety_value_keys.sort(reverse=True)
-            print(safety_value_keys)
 
             # Find the highest safety_value with a path for that node
             # and assigns the corresponding path to sdto_path
