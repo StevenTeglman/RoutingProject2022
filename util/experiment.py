@@ -5,13 +5,13 @@ from algorithms.sdto import algorithm as sdto
 from algorithms.sdto import collect_safety_values
 from util.graph import graph_random 
 from datetime import datetime
-import json
 import os
+import pandas
 
 
 
-def run_experiment(number_of_iterations=10, safety_value_min=2, disturbance_chance=25):
-    (G, eligible_nodes) = graph_random(15, disturbance_direction='up', disturbance_chance_percentage=75, obstacle_origin_chance=5)
+def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_chance=25):
+    (G, eligible_nodes) = graph_random(35, disturbance_direction='up', disturbance_chance_percentage=75, obstacle_origin_chance=5)
     start = eligible_nodes[0]
     end = eligible_nodes[-1]
     G = robustness_calculation(G)
@@ -22,6 +22,7 @@ def run_experiment(number_of_iterations=10, safety_value_min=2, disturbance_chan
     sv_max = max(safety_list)
     distance_saved_allowance = 2
     result = {}
+    dict_keys = 0
     _now = datetime.now()
     foldername = f"{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
     os.mkdir(f"./simulation_logs/{foldername}")
@@ -30,13 +31,13 @@ def run_experiment(number_of_iterations=10, safety_value_min=2, disturbance_chan
         G = sdto(G, end, sv_min, distance_saved_allowance)
         for current_iteration in range(number_of_iterations):
             current_traversal = traverse(G, start, disturbance_chance)
-            traversal_data_num_only = [current_traversal[0], len(current_traversal[1]), current_traversal[2]]
-            traversal_data_readable = [f"Goal reached: {current_traversal[0]}", f"Path length: {len(current_traversal[1])}", f"Times disturbed: {current_traversal[2]}"]
-            result[current_iteration] = traversal_data_readable
+            traversal_data_num_only = [current_traversal[0], len(current_traversal[1]), current_traversal[2], sv_min]
+            traversal_data_readable = [f"Goal reached: {current_traversal[0]}", f"Path length: {len(current_traversal[1])}", f"Times disturbed: {current_traversal[2]}", f"Safety Value: {sv_min}"]
+            result[dict_keys] = traversal_data_num_only
+            dict_keys += 1
             
-        filename = f"SVmin{sv_min}_DSA{distance_saved_allowance}"
-        with open(f"./simulation_logs/{foldername}/{filename}.json", "w") as file:
-            json.dump(result, file, indent=4)
-
-        result = {}
         sv_min += 1
+    
+    data_frame = pandas.DataFrame.from_dict(result, orient="index", 
+                                            columns=["goal_reached", "path_length", "times_disturbed", "safety_value"])
+    data_frame.to_csv(f"./simulation_logs/{foldername}/data.csv")
