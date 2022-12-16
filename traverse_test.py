@@ -10,7 +10,7 @@ end = eligible_nodes[-1]
 
 G = robustness.robustness_calculation(G)
 
-G = sdto.algorithm(G, end, 2, 2)
+G = sdto.algorithm(G, end, start, 2, 2)
 
 state = traverse_simulator.traverse(G, start, 50)
 path = state[1]

@@ -13,7 +13,7 @@ import os
 
 def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_chance=25):
     # Create a random graph for the experiment and select start/end nodes
-    (G, eligible_nodes) = graph_random(35, disturbance_direction='up', disturbance_chance_percentage=75, obstacle_origin_chance=5)
+    (G, eligible_nodes) = graph_random(15, disturbance_direction='up', disturbance_chance_percentage=75, obstacle_origin_chance=5)
     start = eligible_nodes[0]
     end = eligible_nodes[-1]
     G = robustness_calculation(G)
@@ -41,11 +41,10 @@ def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_cha
 
     # Traverse the graph for every safety value, @number_of_iterations amount of times
     while sv_min <= sv_max:
-        G = sdto(G, end, sv_min, distance_saved_allowance)
+        G = sdto(G, end, start, sv_min, distance_saved_allowance)
         for current_iteration in range(number_of_iterations):
             current_traversal = traverse(G, start, disturbance_chance)
-            traversal_data_num_only = [current_traversal[0], len(current_traversal[1]), current_traversal[2], sv_min]
-            traversal_data_readable = [f"Goal reached: {current_traversal[0]}", f"Path length: {len(current_traversal[1])}", f"Times disturbed: {current_traversal[2]}", f"Safety Value: {sv_min}"]
+            traversal_data_num_only = [current_traversal[0], len(current_traversal[1]), current_traversal[2], current_traversal[3], sv_min, foldername]
             result[dict_keys] = traversal_data_num_only
             dict_keys += 1
             
@@ -53,5 +52,5 @@ def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_cha
     
     # Convert the results into a data frame, set column names, save as a csv file
     data_frame = pandas.DataFrame.from_dict(result, orient="index", 
-                                            columns=["goal_reached", "path_length", "times_disturbed", "safety_value"])
+                                            columns=["goal_reached", "path_length", "times_disturbed", "is_alternative", "safety_value", "graph_reference"])
     data_frame.to_csv(f"./simulation_logs/{foldername}/data.csv")
