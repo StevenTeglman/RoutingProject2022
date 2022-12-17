@@ -7,5 +7,6 @@ import datetime
 
 
 print(datetime.datetime.now())
-experiment.run_experiment()
+for i in range(21):
+    experiment.run_experiment()
 print(datetime.datetime.now())
