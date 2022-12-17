@@ -1,4 +1,5 @@
 from math import inf
+import math
 from util.robustness import robustness_calculation
 from util.traverse_simulator import traverse
 from algorithms.sdto import algorithm as sdto
@@ -15,10 +16,10 @@ import os
 def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_chance=20):
     # Create a random graph for the experiment and select start/end nodes
     (G, eligible_nodes) = graph_random(75, disturbance_direction='random', disturbance_chance_percentage=55, obstacle_origin_chance=5, danger_scale=0.20)
-    start = random.choice(eligible_nodes)
+    only_infs = [eligible_node for eligible_node in eligible_nodes if G.nodes[eligible_node]["safety_value"] == math.inf]
+    start = random.choice(only_infs)
     eligible_nodes.remove(start)
     end = random.choice(eligible_nodes)
-    G = robustness_calculation(G)
 
     G = sdto(G, end, start, 1, 2)
     if G.nodes[start]['sdto_path'] == []:
