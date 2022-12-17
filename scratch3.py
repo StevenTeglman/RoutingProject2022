@@ -8,12 +8,17 @@ G = graph.create_unweighted_multidigraph(5,5)
 
 graph.create_dangers(7,7,G)
 graph.create_dangers(5,5,G)
+graph.create_dangers(21,21,G)
 
 graph.create_obstacle(6, 16, 5, G)
 
 graph.create_disturbances_between_nodes(2,7,G)
 graph.create_disturbances_between_nodes(8,7,G)
 graph.create_disturbances_between_nodes(9,8,G)
+graph.create_disturbances_between_nodes(12,7,G)
+graph.create_disturbances_between_nodes(17,12,G)
+graph.create_disturbances_between_nodes(22,17,G)
+graph.create_disturbances_between_nodes(22,21,G)
 
 G = sdto.algorithm(graph=G, start=0, end=4, safety_value_min=2, distance_saved_allowence=0)
 
@@ -25,13 +30,19 @@ pp.pprint(G.nodes[0])
 
 pos = nx.multipartite_layout(G, subset_key='layer')
 
+for node in G.nodes():
+    sv = G.nodes[node]["safety_value"]
+    heur = G.nodes[node]["heuristic"]
+    label = f"Node: {node}\nSV: {sv}\nHeur: {heur}"
+    G.nodes[node]['label'] = label
+
 ## Plot graph
 colors = nx.get_edge_attributes(G,'color').values()
 weights = nx.get_edge_attributes(G,'weight').values()
 thickness = nx.get_edge_attributes(G,'thickness').values()
 labels = nx.get_edge_attributes(G,'weight')
 node_color = nx.get_node_attributes(G,'color').values()
-node_label = nx.get_node_attributes(G,'safety_value')
+node_label = nx.get_node_attributes(G,'label')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
 plt.figure(figsize=(10,10))
