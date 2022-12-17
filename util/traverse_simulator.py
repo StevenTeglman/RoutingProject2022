@@ -8,10 +8,14 @@ def traverse(graph, start, disturbance_chance):
     current_node_index = start
     current_node = graph.nodes()[current_node_index]
 
-    while len(current_node['sdto_path']) > 1:       
+    while len(current_node['sdto_path']) > 1:
         # Set the destination of the current "step"
         path.append(int(current_node_index))
-        predicted_index = current_node['sdto_path'][1]  
+        predicted_index = current_node['sdto_path'][1]
+
+        if  is_alternative == False:
+            is_alternative = current_node['is_sdto_alternative']
+        
         if current_node['is_danger']:
             return (False, path, disturbance_counter, is_alternative)
 
