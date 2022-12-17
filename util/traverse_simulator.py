@@ -13,12 +13,12 @@ def traverse(graph, start, disturbance_chance):
         path.append(int(current_node_index))
         predicted_index = current_node['sdto_path'][1]
 
-        if current_node['is_sdto_alternative']:
-            is_alternative = True
-        
         if current_node['is_danger']:
             return (False, path, disturbance_counter, is_alternative)
 
+        if current_node['is_sdto_alternative']:
+            is_alternative = True
+        
         for edge in graph.edges(current_node_index, data=True):
             if edge[2]['is_disturbance']:
                 get_disturbed = random.randint(1, 100) <= disturbance_chance
