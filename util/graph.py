@@ -26,6 +26,8 @@ def create_unweighted_multidigraph(x: int, y: int):
                        safety_value=math.inf, 
                        is_obstacle=False, 
                        is_danger=False,
+                       is_start=False,
+                       is_sdto_alternative=False,
                        safety_value_paths={},
                        path_to_goal=[],
                        sdto_path=[])
@@ -217,6 +219,8 @@ def create_obstacle(start, end, step, graph):
             n[i]['is_danger']= False       
             n[i]['heuristic']= math.inf
             n[i]['safety_value_paths']= {}    
+            n[i]['is_start_node']= False    
+            n[i]['is_sdto_alternative']= False    
 
 def create_dangers(start,end,graph,step=1):
 
@@ -228,6 +232,8 @@ def create_dangers(start,end,graph,step=1):
             n[i]['safety_value']=0
             n[i]['is_danger']=True
             n[i]['safety_value_paths']= {}
+            n[i]['is_start_node']= False    
+            n[i]['is_sdto_alternative']= False    
 
 def create_disturbances_between_nodes(start, end, graph):
     new_node = (start, 
@@ -308,6 +314,37 @@ def graph_random(grid_size, disturbance_direction='right', disturbance_chance_pe
 
     eligible_nodes = list(set(non_obstacle_nodes).difference(danger_nodes_set))
     return (G, eligible_nodes)
+
+def graph_scalable(size, disturbance_direction='up', danger_locations=['up']):
+    G = create_unweighted_multidigraph(size, size)
+    for danger_location in danger_locations:
+        if danger_location == 'up':
+            create_dangers(0, size-1, G)
+        elif danger_location == 'down':
+            create_dangers(size**2 - size, size**2-1, G)
+        elif danger_location == 'left':
+            create_dangers(0, size**2 - size, G, size)
+        elif danger_location == 'right':
+            create_dangers(size-1, size**2-1, G, size)
+    
+    for node in G.nodes():
+        if G.nodes[node]['is_obstacle'] or G.nodes[node]['is_danger']: 
+            continue
+
+        if disturbance_direction == 'up':
+            if math.floor(node/size) != 0:
+                create_disturbances_between_nodes(node, node - size, G)
+        elif disturbance_direction == 'down':
+            if math.floor(node/size) != size-1:
+                create_disturbances_between_nodes(node, node + size, G)
+        elif disturbance_direction == 'right':
+            if (node + 1) % size != 0:
+                create_disturbances_between_nodes(node, node + 1, G)
+        elif disturbance_direction == 'left':
+            if node % size != 0:
+                create_disturbances_between_nodes(node, node - 1, G)      
+    return G
+
 
 def graph_preset_1():
     G = create_unweighted_multidigraph(50,50)

@@ -1,54 +1,26 @@
-from ast import List
-from turtle import color
-import networkx as nx
+from util import graph
+from algorithms import sdto
 import matplotlib.pyplot as plt
-import numpy as np
-from util import graph, robustness
-from algorithms import breadth_first
-from algorithms import depth_first
-from algorithms import dijkstra
-from algorithms import a_star
-from algorithms import greedy_best_first
+import networkx as nx
+import pprint
 
-## Initialise empty graph G
-# G = graph.create_unweighted_multidigraph(50,50)
-# start = int(input("Enter a number for the start node: "))
-# end = int(input("Enter a number for the goal node: "))
-start = 0
-end = 2499
-G = graph.graph_preset_1()
-# G = graph.graph_preset_2()
-# G = graph.graph_preset_3()
-G = graph.graph_preset_4()
+G = graph.create_unweighted_multidigraph(5,5)
 
-# G = robustness.robustness_calculation(G)
+graph.create_dangers(7,7,G)
+graph.create_dangers(5,5,G)
 
+graph.create_obstacle(6, 16, 5, G)
 
-## Run your chosen algorithm and get a path back.
-# path, stats = dijkstra.algorithm(G, start, end)
-# path, stats = a_star.algorithm(G, start, end)
-# path, stats = breadth_first.non_recursive_algorithm(G,start,end)
-# path,stats = list(depth_first.algorithm(G,start,end))
-# path, stats = list(greedy_best_first.algorithm(G,start,end))
-path, stats = a_star.algorithm2(G, start, end)
+graph.create_disturbances_between_nodes(2,7,G)
+graph.create_disturbances_between_nodes(8,7,G)
+graph.create_disturbances_between_nodes(9,8,G)
 
+G = sdto.algorithm(graph=G, start=0, end=4, safety_value_min=2, distance_saved_allowence=0)
 
-print(path, stats)
-
-# region Creating figure plotting things
-
-## Add path as edges to G
-for e in G.edges:
-    for i in range((len(path) - 1)):
-        G[path[0+i]][path[1+i]][e[2]]['color']="g"
-        G[path[0+i]][path[1+i]][e[2]]['thickness']=1.5
-for node in path:
-    G.nodes[node]['color'] = 'g'
-
-G.nodes[path[0]]['color'] = 'darkblue'
-G.nodes[path[-1]]['color'] = 'darkseagreen'
-
-
+pp = pprint.PrettyPrinter(indent=4, depth = 3, compact = True)
+pp.pprint(G.nodes[0])
+# print(G.nodes[0])
+# region plotty mcplotface
 ## Set vertex positioning to layers of straight lines
 
 pos = nx.multipartite_layout(G, subset_key='layer')
@@ -62,8 +34,8 @@ node_color = nx.get_node_attributes(G,'color').values()
 node_label = nx.get_node_attributes(G,'safety_value')
 edge_style = nx.get_edge_attributes(G,'style').values()
 
+plt.figure(figsize=(10,10))
 
-plt.figure(figsize=(50,50))
 
 ax = plt.gca()
 for e in G.edges:
@@ -94,7 +66,7 @@ nx.draw_networkx_labels(G,
                         labels=node_label)
             
 
-# plt.savefig('graph.svg', dpi = 1000)
+
 plt.axis('off')
 plt.show()
 
