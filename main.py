@@ -1,4 +1,5 @@
 from ast import List
+import pprint
 from turtle import color
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ from algorithms import depth_first
 from algorithms import dijkstra
 from algorithms import a_star
 from algorithms import greedy_best_first
+from algorithms import sdto
 
 ## Initialise empty graph G
 # G = graph.create_unweighted_multidigraph(50,50)
@@ -20,33 +22,36 @@ G = graph.graph_preset_1()
 # G = graph.graph_preset_2()
 # G = graph.graph_preset_3()
 G = graph.graph_preset_4()
-
+G = nx.read_gpickle("./simulation_logs/17_11_54_43/graph.gpickle")
 # G = robustness.robustness_calculation(G)
 
+G = sdto.algorithm(G, 2488, 335, 2, 2)
 
+pp = pprint.PrettyPrinter(indent=4, depth = 3, compact = True)
+pp.pprint(G.nodes[335])
 ## Run your chosen algorithm and get a path back.
 # path, stats = dijkstra.algorithm(G, start, end)
 # path, stats = a_star.algorithm(G, start, end)
 # path, stats = breadth_first.non_recursive_algorithm(G,start,end)
 # path,stats = list(depth_first.algorithm(G,start,end))
 # path, stats = list(greedy_best_first.algorithm(G,start,end))
-path, stats = a_star.algorithm2(G, start, end)
+# path, stats = a_star.algorithm2(G, start, end)
 
 
-print(path, stats)
+# print(path, stats)
 
 # region Creating figure plotting things
 
 ## Add path as edges to G
-for e in G.edges:
-    for i in range((len(path) - 1)):
-        G[path[0+i]][path[1+i]][e[2]]['color']="g"
-        G[path[0+i]][path[1+i]][e[2]]['thickness']=1.5
-for node in path:
-    G.nodes[node]['color'] = 'g'
+# for e in G.edges:
+#     for i in range((len(path) - 1)):
+#         G[path[0+i]][path[1+i]][e[2]]['color']="g"
+#         G[path[0+i]][path[1+i]][e[2]]['thickness']=1.5
+# for node in path:
+#     G.nodes[node]['color'] = 'g'
 
-G.nodes[path[0]]['color'] = 'darkblue'
-G.nodes[path[-1]]['color'] = 'darkseagreen'
+# G.nodes[path[0]]['color'] = 'darkblue'
+# G.nodes[path[-1]]['color'] = 'darkseagreen'
 
 
 ## Set vertex positioning to layers of straight lines
@@ -95,7 +100,7 @@ nx.draw_networkx_labels(G,
             
 
 # plt.savefig('graph.svg', dpi = 1000)
-plt.axis('off')
-plt.show()
+# plt.axis('off')
+# plt.show()
 
 # endregion
