@@ -12,9 +12,9 @@ import os
 
 
 
-def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_chance=25):
+def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_chance=20):
     # Create a random graph for the experiment and select start/end nodes
-    (G, eligible_nodes) = graph_random(50, disturbance_direction='random', disturbance_chance_percentage=55, obstacle_origin_chance=5, danger_scale=0.20)
+    (G, eligible_nodes) = graph_random(75, disturbance_direction='random', disturbance_chance_percentage=55, obstacle_origin_chance=5, danger_scale=0.20)
     start = random.choice(eligible_nodes)
     eligible_nodes.remove(start)
     end = random.choice(eligible_nodes)
@@ -24,7 +24,7 @@ def run_experiment(number_of_iterations=100, safety_value_min=1, disturbance_cha
     safety_list = collect_safety_values(G)
     safety_list.remove(inf)
     sv_max = max(safety_list)
-    allowances = [2, 4, 6]
+    allowances = [2, 5, 10]
     result = {}
     dict_keys = 0
     
