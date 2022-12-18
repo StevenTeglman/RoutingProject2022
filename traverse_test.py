@@ -15,6 +15,17 @@ from multiprocessing import Process
     # except:
     #     print("Something went wrong. Aborting experiment.")
 # print(datetime.datetime.now())
+from multiprocessing import Process
+
+
+
+# print(datetime.datetime.now())
+# for i in range(150):
+#     try:
+#         experiment.run_experiment()
+    # except:
+    #     print("Something went wrong. Aborting experiment.")
+# print(datetime.datetime.now())
 
 
 if __name__ == '__main__':
