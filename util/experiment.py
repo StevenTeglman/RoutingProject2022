@@ -35,7 +35,7 @@ def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_cha
     
     # Create a folder for the current experiment
     _now = datetime.now()
-    foldername = f"{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
+    foldername = f"J_{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
     os.mkdir(f"./simulation_logs/{foldername}")
    
     # Save current graph in the folder

@@ -7,6 +7,10 @@ import datetime
 
 
 print(datetime.datetime.now())
-for i in range(21):
-    experiment.run_experiment()
+for i in range(500):
+    try:
+        print("Running simulation number ", i)
+        experiment.run_experiment()
+    except:
+        print("Something went wrong. Aborting experiment.")
 print(datetime.datetime.now())
