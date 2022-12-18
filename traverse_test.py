@@ -7,6 +7,9 @@ import datetime
 
 
 print(datetime.datetime.now())
-for i in range(21):
-    experiment.run_experiment()
+for i in range(101):
+    try:
+        experiment.run_experiment()
+    except:
+        print("Something went wrong. Aborting experiment.")
 print(datetime.datetime.now())
