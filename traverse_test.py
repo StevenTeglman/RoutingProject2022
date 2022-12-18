@@ -7,7 +7,7 @@ import datetime
 
 
 print(datetime.datetime.now())
-for i in range(101):
+for i in range(1):
     try:
         experiment.run_experiment()
     except:
