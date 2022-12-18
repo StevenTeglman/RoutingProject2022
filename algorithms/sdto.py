@@ -4,6 +4,7 @@ from math import inf, isinf
 from util import robustness
 
 def backwards_dijkstra_path_collection(graph, end, safety_value_min):
+    min_safety_value = safety_value_min
     unvisited = list(graph)
     obstacles = [n for n,v in graph.nodes(data=True) if v['is_obstacle'] != False]
     for obstacle in obstacles:
@@ -13,7 +14,7 @@ def backwards_dijkstra_path_collection(graph, end, safety_value_min):
     distances = {}
     graph.nodes[end]['color'] = 'darkseagreen'
     graph.nodes[end]['path_to_goal'] = [end]
-    graph.nodes[end]['safety_value_paths'][safety_value_min] = [end]
+    graph.nodes[end]['safety_value_paths'][min_safety_value] = [end]
     
     for node in unvisited:
         graph.nodes[node]['heuristic'] = inf
@@ -28,7 +29,7 @@ def backwards_dijkstra_path_collection(graph, end, safety_value_min):
                 current_node = node
                 
         for neighbor in graph[current_node]:
-            if graph.nodes[neighbor]["safety_value"] < safety_value_min:
+            if graph.nodes[neighbor]["safety_value"] < min_safety_value:
                 continue
             
             heuristic = distances[current_node] + graph[current_node][neighbor][0]['weight']
@@ -80,6 +81,7 @@ def collect_safety_values(graph):
     return list(safety_value_set)
 
 def algorithm(graph, end, start, safety_value_min, distance_saved_allowence):
+    min_safety_value = safety_value_min
     graph = robustness.robustness_calculation(graph)
     
     # Collect Every unique safety value
@@ -88,21 +90,21 @@ def algorithm(graph, end, start, safety_value_min, distance_saved_allowence):
     graph.nodes[start]["is_start"] = True
 
     # Check to see if user specified safety value in graph
-    if safety_value_min not in safety_values:
+    if min_safety_value not in safety_values:
         safety_values_copy = safety_values.copy()
         if inf in safety_values_copy:
             safety_values_copy.remove(inf)
         
-        # Set safety_value_min to highest none inf value
+        # Set min_safety_value to highest none inf value
         safety_values_copy.sort()
         if not safety_values_copy:
             safety_values_copy = inf
         else:
-            safety_value_min = safety_values_copy[-1]
+            min_safety_value = safety_values_copy[-1]
         
         print("\n#############################################")
         print("The chosen safety value is too high for graph")
-        print(f"New Min Safety Value {safety_value_min}\n")
+        print(f"New Min Safety Value {min_safety_value}\n")
 
     for node in graph.nodes():  
         for safety_value in safety_values:
@@ -116,7 +118,7 @@ def algorithm(graph, end, start, safety_value_min, distance_saved_allowence):
     for node in graph.nodes():
         # If no path originally exists with defined safety value, return empty list
 
-        if not graph.nodes[node]['safety_value_paths'][safety_value_min]:
+        if not graph.nodes[node]['safety_value_paths'][min_safety_value]:
             graph.nodes[node]['sdto_path'] = []
             continue
         else:
@@ -126,17 +128,17 @@ def algorithm(graph, end, start, safety_value_min, distance_saved_allowence):
 
         # Check to ensure there exists a safety_value in the node beneath our sv_min so we can compare.
         # If no, current sv_path is just assigned to sdto_path
-        if safety_value_min-1 in safety_value_length_pairs:
-            difference_saved = safety_value_length_pairs[safety_value_min] - safety_value_length_pairs[safety_value_min-1]
+        if min_safety_value-1 in safety_value_length_pairs:
+            difference_saved = safety_value_length_pairs[min_safety_value] - safety_value_length_pairs[min_safety_value-1]
             # If distance saved is greater or equal to distance saved allowence, assign the new path to that nodes SDTO path
             if difference_saved > distance_saved_allowence:
                 graph.nodes[node]['is_sdto_alternative'] = True
-                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min-1]
+                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][min_safety_value-1]
             
             else:
-                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min]
+                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][min_safety_value]
         else:
-            graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min]
+            graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][min_safety_value]
 
         
     # Create paths out of previously unreachable nodes

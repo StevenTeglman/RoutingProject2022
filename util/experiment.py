@@ -10,8 +10,6 @@ import networkx
 import random
 import os
 
-
-
 def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_chance=20):
     # Create a random graph for the experiment and select start/end nodes
     (G, eligible_nodes) = graph_random(75, disturbance_direction='random', disturbance_chance_percentage=55, obstacle_origin_chance=5, danger_scale=0.20)

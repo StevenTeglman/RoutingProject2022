@@ -19,7 +19,6 @@ def calculate_edge_values(graph):
     return graph        
 
 
-
 def calculate_disturbance_values(graph):
     for node in graph.nodes():
         if graph.nodes[node]['is_obstacle'] or graph.nodes[node]['is_danger']:
