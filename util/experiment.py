@@ -1,4 +1,5 @@
 from math import inf
+import math
 from util.robustness import robustness_calculation
 from util.traverse_simulator import traverse
 from algorithms.sdto import algorithm as sdto
@@ -12,11 +13,11 @@ import os
 
 def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_chance=20):
     # Create a random graph for the experiment and select start/end nodes
-    (G, eligible_nodes) = graph_random(75, disturbance_direction='random', disturbance_chance_percentage=55, obstacle_origin_chance=5, danger_scale=0.20)
-    start = random.choice(eligible_nodes)
+    (G, eligible_nodes) = graph_random(75, disturbance_direction='up', disturbance_chance_percentage=55, obstacle_origin_chance=5, danger_scale=0.20)
+    only_infs = [eligible_node for eligible_node in eligible_nodes if G.nodes[eligible_node]["safety_value"] == math.inf]
+    start = random.choice(only_infs)
     eligible_nodes.remove(start)
     end = random.choice(eligible_nodes)
-    G = robustness_calculation(G)
 
     G = sdto(G, end, start, 1, 2)
     if G.nodes[start]['sdto_path'] == []:
@@ -26,13 +27,13 @@ def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_cha
     safety_list = collect_safety_values(G)
     safety_list.remove(inf)
     sv_max = max(safety_list)
-    allowances = [2, 5, 10]
+    allowances = [2, 5, 10, 99]
     result = {}
     dict_keys = 0
     
     # Create a folder for the current experiment
     _now = datetime.now()
-    foldername = f"{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
+    foldername = f"M_{_now.day}_{_now.hour}_{_now.minute}_{_now.second}"
     os.mkdir(f"./simulation_logs/{foldername}")
    
     # Save current graph in the folder
@@ -47,12 +48,13 @@ def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_cha
         for allowance in allowances:
             G = sdto(G, end, start, sv_min, allowance)
             for current_iteration in range(number_of_iterations):
-                current_traversal = traverse(G, start, disturbance_chance)
+                current_traversal = traverse(G, start, disturbance_chance, sv_min)
                 result[dict_keys] = [
                                     current_traversal[0], 
                                     len(current_traversal[1]), 
                                     current_traversal[2], 
-                                    current_traversal[3], 
+                                    current_traversal[3],
+                                    current_traversal[4], 
                                     sv_min, 
                                     allowance,
                                     safety_list, 
@@ -68,7 +70,8 @@ def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_cha
                                                 "goal_reached", 
                                                 "path_length", 
                                                 "times_disturbed", 
-                                                "is_alternative", 
+                                                "is_alternative",
+                                                "distance_saved", 
                                                 "safety_value", 
                                                 "allowance",
                                                 "safety_list", 

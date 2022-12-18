@@ -131,12 +131,13 @@ def algorithm(graph, end, start, safety_value_min, distance_saved_allowence):
         if min_safety_value-1 in safety_value_length_pairs:
             difference_saved = safety_value_length_pairs[min_safety_value] - safety_value_length_pairs[min_safety_value-1]
             # If distance saved is greater or equal to distance saved allowence, assign the new path to that nodes SDTO path
-            if difference_saved > distance_saved_allowence:
+            if difference_saved >= distance_saved_allowence:
                 graph.nodes[node]['is_sdto_alternative'] = True
                 graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][min_safety_value-1]
             
             else:
-                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][min_safety_value]
+                graph.nodes[node]['is_sdto_alternative'] = False
+                graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][safety_value_min]
         else:
             graph.nodes[node]['sdto_path'] = graph.nodes[node]['safety_value_paths'][min_safety_value]
 
