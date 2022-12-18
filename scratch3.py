@@ -4,26 +4,25 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pprint
 
-# G = graph.create_unweighted_multidigraph(5,5)
-G = nx.read_gpickle("simulation_logs/M_18_15_12_45/graph.gpickle")
-start = 2699
-end = 2831
-# graph.create_dangers(7,7,G)
+G = graph.create_unweighted_multidigraph(5,5)
+# G = nx.read_gpickle("simulation_logs/M_18_15_12_45/graph.gpickle")
+start = 0
+end = 24
+graph.create_dangers(7,7,G)
 # graph.create_dangers(5,5,G)
 # graph.create_dangers(21,21,G)
 
-# graph.create_obstacle(6, 16, 5, G)
+graph.create_obstacle(6, 16, 5, G)
 
-# graph.create_disturbances_between_nodes(2,7,G)
-# graph.create_disturbances_between_nodes(8,7,G)
-# graph.create_disturbances_between_nodes(9,8,G)
-# graph.create_disturbances_between_nodes(12,7,G)
-# graph.create_disturbances_between_nodes(17,12,G)
-# graph.create_disturbances_between_nodes(22,17,G)
-# graph.create_disturbances_between_nodes(22,21,G)
+graph.create_disturbances_between_nodes(2,7,G)
+graph.create_disturbances_between_nodes(8,7,G)
+graph.create_disturbances_between_nodes(9,8,G)
+graph.create_disturbances_between_nodes(12,7,G)
+graph.create_disturbances_between_nodes(17,12,G)
+graph.create_disturbances_between_nodes(22,17,G)
+graph.create_disturbances_between_nodes(22,21,G)
 
 G = sdto.algorithm(graph=G, start=start, end=end, safety_value_min=2, distance_saved_allowence=2)
-sdto.algorithm(graph=G, start=start, end=end, safety_value_min=2, distance_saved_allowence=10)
 
 pp = pprint.PrettyPrinter(indent=4, depth = 3, compact = True)
 pp.pprint(G.nodes[start])
