@@ -27,7 +27,7 @@ def run_experiment(number_of_iterations=200, safety_value_min=1, disturbance_cha
     safety_list = collect_safety_values(G)
     safety_list.remove(inf)
     sv_max = max(safety_list)
-    allowances = [2, 5, 10, 99]
+    allowances = [2, 5, 10, 6000]
     result = {}
     dict_keys = 0
     
