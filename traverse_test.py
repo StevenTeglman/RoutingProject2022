@@ -31,7 +31,7 @@ from multiprocessing import Process
 if __name__ == '__main__':
     runs = 150
     # define batch size
-    batch_size = 5
+    batch_size = 4
     # execute in batches
     for i in range(0, runs, batch_size):
         # execute all tasks in a batch
