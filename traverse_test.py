@@ -7,18 +7,6 @@ import datetime
 from multiprocessing import Process
 
 
-
-# print(datetime.datetime.now())
-# for i in range(150):
-#     try:
-#         experiment.run_experiment()
-    # except:
-    #     print("Something went wrong. Aborting experiment.")
-# print(datetime.datetime.now())
-from multiprocessing import Process
-
-
-
 # print(datetime.datetime.now())
 # for i in range(150):
 #     try:
